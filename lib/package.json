@@ -1,0 +1,21 @@
+{
+  "description": "react native easy and fancy swiper 🙇🏻‍♂️",
+  "homepage": "",
+  "repository": "https://github.com/JeongShin/react-native-awesome-swiper",
+  "author": "JeongShin (https://github.com/JeongShin)",
+  "name": "react-native-awesome-swiper",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "version": "0.0.1",
+  "keywords": [
+    "react",
+    "react-native",
+    "swiper",
+    "slider"
+  ],
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "esnext",
+    "module": "esnext",
+    "lib": ["esnext"],
+    "jsx": "react-native",
+    "pretty": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "declaration": true,
+    "removeComments": false,
+    "isolatedModules": false,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "outDir": "./lib",
+    "esModuleInterop": true,
+    "allowJs": true
+  },
+  "include": ["packages/**/*.tsx", "packages/**/*.d.ts", "packages/**/*.ts"],
+  "exclude": ["node_modules"]
+}

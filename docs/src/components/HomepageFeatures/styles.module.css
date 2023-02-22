@@ -1,0 +1,16 @@
+.features {
+  display: flex;
+  align-items: center;
+  padding-bottom: 2rem;
+  width: 100%;
+}
+
+.featureSvg {
+  height: 400px;
+  width: 400px;
+}
+
+table {
+  width: 100%;
+  display: table;
+}
