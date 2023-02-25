@@ -2789,6 +2789,11 @@
     react-native-modal-selector "^2.1.1"
     tinycolor2 "^1.4.1"
 
+"@storybook/addon-react-native-web@^0.0.19":
+  version "0.0.19"
+  resolved "https://registry.npmjs.org/@storybook/addon-react-native-web/-/addon-react-native-web-0.0.19.tgz#c9f39bf8c65b6a7219866308e6a1ba3d9614e153"
+  integrity sha512-uQhYPv+VD7f44Smqxa57kdPTgL+VAD6LqTG+MbmdVaWiHqdA6btbAIRoTbYU2IME98OEKTIBfwbzOgloCheAjA==
+
 "@storybook/addons@5.3.21":
   version "5.3.21"
   resolved "https://registry.npmjs.org/@storybook/addons/-/addons-5.3.21.tgz#ee312c738c33e8c34dc11777ef93522c3c36e56a"
@@ -4722,7 +4727,7 @@ babel-plugin-polyfill-regenerator@^0.4.1:
   dependencies:
     "@babel/helper-define-polyfill-provider" "^0.3.3"
 
-babel-plugin-react-native-web@~0.18.2:
+babel-plugin-react-native-web@^0.18.12, babel-plugin-react-native-web@~0.18.2:
   version "0.18.12"
   resolved "https://registry.npmjs.org/babel-plugin-react-native-web/-/babel-plugin-react-native-web-0.18.12.tgz#3e9764484492ea612a16b40135b07c2d05b7969d"
   integrity sha512-4djr9G6fMdwQoD6LQ7hOKAm39+y12flWgovAqS1k5O8f42YQ3A1FFMyV5kKfetZuGhZO5BmNmOdRRZQ1TixtDw==
