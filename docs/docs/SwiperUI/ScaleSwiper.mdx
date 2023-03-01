@@ -1,0 +1,147 @@
+import gif from '../../static/gif/scale_swiper_basic.gif';
+import basic from '../../static/scale-swiper-samples/vertical-center.png';
+import slide4 from '../../static/scale-swiper-samples/slide-count-4.png';
+import scaleDown from '../../static/scale-swiper-samples/scale-down-rate.png';
+import verticalBottom from '../../static/scale-swiper-samples/vertical-bottom.gif';
+import verticalTop from '../../static/scale-swiper-samples/vertical-top.gif';
+
+# ScaleSwiper
+
+## Overview
+
+<div className="sample-gif">
+  <img src={gif} className="sample-gif-img" alt="scale-swiper-example" />
+</div>
+
+- `Provider` required to render FlatList
+- `pagingEnabled` props not working on web.
+
+Basic usage
+
+```tsx title="ScaleSwiper.tsx"
+import { ScaleSwiper } from 'react-native-awesome-swiper';
+
+const Component = () => {
+  const data: string[] = [
+    'https://file.mk.co.kr/meet/neds/2022/06/image_readtop_2022_486646_16541333805062545.jpg',
+    'http://file.mk.co.kr/meet/neds/2022/02/image_readtop_2022_104459_16440258224937758.jpg',
+    'https://pbs.twimg.com/media/FoR4kypaMAA0Nm9?format=jpg&name=4096x4096',
+  ];
+
+  const { ref, refCallback } = useSwiperRefCallback<string>();
+
+  return (
+    <ScaleSwiper.Provider>
+      <ScaleSwiper.FlatList
+        data={data}
+        refCallback={refCallback}
+        renderItem={({ item }) => (
+          <Image style={styles.image} source={{ uri: item }} />
+        )}
+      />
+      <ScaleSwiper.DotIndicator
+        onPress={(index: number) => {
+          ref.current?.scrollToIndex({ index, animated: true });
+        }}
+      />
+    </ScaleSwiper.Provider>
+  );
+};
+```
+
+## Props
+
+ScaleSwiperProps extends all [FlatListProps](https://reactnative.dev/docs/flatlist)
+
+### `slideCount`
+
+How many slide should be visible in screen. Only handles **even number**. odd number will be parsed to even number.
+
+| Type   | Default | Required |
+| ------ | ------- | -------- |
+| number | 2       | NO       |
+
+<div className="sample-gif sample-gif-grid">
+  <div className="sample-gif-box">
+    <h2>slideCount: 2</h2>
+    <img src={basic} className="sample-gif-img" alt="scale-swiper-example" />
+  </div>
+  <div className="sample-gif-box">
+    <h2>slideCount: 4</h2>
+    <img src={slide4} className="sample-gif-img" alt="scale-swiper-example" />
+  </div>
+</div>
+
+### `verticalAlign`
+
+vertical alignment fo slides beside center slide. `itemHeight` required for calculation.
+
+| Type                          | Default  | Required |
+| ----------------------------- | -------- | -------- |
+| 'top' \| 'bottom' \| 'center' | 'center' | NO       |
+
+<div className="sample-gif sample-gif-grid">
+  <div className="sample-gif-box">
+    <h2>{`verticalAlign: 'top'`}</h2>
+    <img
+      src={verticalTop}
+      className="sample-gif-img"
+      alt="scale-swiper-example"
+    />
+  </div>
+  <div className="sample-gif-box">
+    <h2>{`verticalAlign: 'bottom'`}</h2>
+    <img
+      src={verticalBottom}
+      className="sample-gif-img"
+      alt="scale-swiper-example"
+    />
+  </div>
+</div>
+
+### `itemHeight`
+
+item height. required when using `verticalAlign`. can use function to calculate height to keep ratio.
+
+| Type                                | Default   | Required |
+| ----------------------------------- | --------- | -------- |
+| number \| (width: number) => number | undefined | NO       |
+
+### `scaleDownRate`
+
+How much each items' scale should be decreased from center slide.
+
+| Type   | Default | Required |
+| ------ | ------- | -------- |
+| number | 0.14    | NO       |
+
+<div className="sample-gif sample-gif-grid">
+  <div className="sample-gif-box">
+    <h2>{`scaleDownRate: 0.14 (default)`}</h2>
+    <img src={basic} className="sample-gif-img" alt="scale-swiper-example" />
+  </div>
+  <div className="sample-gif-box">
+    <h2>{`scaleDownRate: 0.3`}</h2>
+    <img
+      src={scaleDown}
+      className="sample-gif-img"
+      alt="scale-swiper-example"
+    />
+  </div>
+</div>
+
+### `transform`
+
+transform type to use
+
+| Type                            | Default | Required |
+| ------------------------------- | ------- | -------- |
+| 'scale' \| 'scaleX' \| 'scaleY' | 'scale' | NO       |
+
+### `refCallback`
+
+callback to use `ref`. see example above.
+
+| Type     | Default   | Required |
+| -------- | --------- | -------- |
+| Function | undefined | NO       |
