@@ -2,7 +2,7 @@
   "name": "react-native-awesome-swiper-app",
   "main": "node_modules/expo/AppEntry.js",
   "version": "1.0.0",
-  "homepage": "https://jeongshin.github.io/",
+  "homepage": "https://react-native-awesome-swiper.site",
   "repository": "https://github.com/JeongShin/react-native-awesome-swiper",
   "author": "JeongShin (https://github.com/JeongShin)",
   "scripts": {
@@ -17,6 +17,7 @@
     "minor": "yarn build && cd lib && release-it minor",
     "major": "yarn build && cd lib && release-it major",
     "build": "tsc --project tsconfig.build.json",
+    "build-docs": "cd docs && yarn deploy",
     "storybook": "start-storybook -p 7007",
     "build-storybook": "build-storybook",
     "jest": "jest --runInBand",
