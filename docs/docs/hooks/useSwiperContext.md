@@ -2,7 +2,7 @@
 
 ## Overview
 
-`useSwiperContext` is hooks to use internal context of swiper
+`useSwiperContext` is hooks to read internal context of swiper
 
 ## Type
 
