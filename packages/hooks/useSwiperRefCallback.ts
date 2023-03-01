@@ -1,10 +1,10 @@
 import { useCallback, useRef } from 'react';
-import { Animated } from 'react-native';
+import { FlatList } from 'react-native';
 
 const useAnimatedFlatListRef = <T>() => {
-  const ref = useRef<Animated.FlatList<T> | null>(null);
+  const ref = useRef<FlatList<T> | null>(null);
 
-  const refCallback = useCallback((_ref: Animated.FlatList<T>) => {
+  const refCallback = useCallback((_ref: FlatList<T>) => {
     ref.current = _ref;
   }, []);
 

@@ -1,12 +1,5 @@
-import React, { useCallback } from 'react';
-import {
-  View,
-  Image,
-  StyleSheet,
-  Platform,
-  FlatList,
-  Animated,
-} from 'react-native';
+import React from 'react';
+import { View, Image, StyleSheet, Platform } from 'react-native';
 import ScaleSwiper from '..';
 import useSwiperRefCallback from '../../../hooks/useSwiperRefCallback';
 import Typo from '../../Typo';
@@ -54,22 +47,6 @@ const Basic = () => {
         <ScaleSwiper.DotIndicator
           onPress={(index) => {
             ref.current?.scrollToIndex({ index, animated: true });
-          }}
-        />
-
-        <FlatList
-          data={[1, 2, 3]}
-          renderItem={() => <></>}
-          ref={(ref) => {
-            ref?.scrollToIndex({ index: 1 });
-          }}
-        />
-
-        <Animated.FlatList
-          data={[1, 2, 3]}
-          renderItem={() => <></>}
-          ref={(ref) => {
-            ref?.scrollToIndex({ index: 1 });
           }}
         />
       </ScaleSwiper.Provider>
