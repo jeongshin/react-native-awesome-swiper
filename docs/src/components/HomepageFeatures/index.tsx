@@ -10,7 +10,7 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: `Welcome, I'm Blue`,
+    title: `Welcome, I'm Jerry`,
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     image: require('@site/static/img/blue-jerry-2.png').default,
   },

@@ -5,19 +5,22 @@ import {
   ListRenderItem,
   useWindowDimensions,
   Platform,
+  FlatList,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
-import useSwiperContext from '../../hooks/useSwiperContext';
+import useUpdateSwiperContext from '../../hooks/useUpdateSwiperContext';
 import logger from '../../logger';
 
 export interface ScaleSwiperProps<Item>
   extends Animated.AnimatedProps<FlatListProps<Item>> {
   transform?: 'scale' | 'scaleX' | 'scaleY';
   slideCount?: number;
-  scaleDownRate?: number;
-  initialScrollIndex?: number;
-  itemHeight?: number | ((itemWidth: number) => number);
   verticalAlign?: 'top' | 'bottom' | 'center' | undefined;
-  refCallback?: (ref: Animated.FlatList<Item>) => void;
+  scaleDownRate?: number;
+  itemHeight?: number | ((itemWidth: number) => number);
+  initialScrollIndex?: number;
+  refCallback?: (ref: FlatList<Item>) => void;
 }
 
 function ScaleSwiper<T>({
@@ -39,7 +42,8 @@ function ScaleSwiper<T>({
 }: ScaleSwiperProps<T>) {
   const { width } = useWindowDimensions();
 
-  const { scrollX, setItemCount } = useSwiperContext();
+  const { setItemCount, setItemWidth, scrollX, setActiveIndex } =
+    useUpdateSwiperContext();
 
   const slideCount = Math.round(_slideCount / 2) * 2;
 
@@ -108,7 +112,13 @@ function ScaleSwiper<T>({
       ],
       {
         useNativeDriver: Platform.select({ web: false, default: true }),
-        listener: _onScroll,
+        listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+          _onScroll && _onScroll(event);
+
+          setActiveIndex(
+            Math.round(event.nativeEvent.contentOffset.x / itemWidth),
+          );
+        },
       },
     ),
   ).current;
@@ -117,12 +127,18 @@ function ScaleSwiper<T>({
     if (typeof props.data?.length !== 'number') return;
     setItemCount(props.data.length);
     scrollX.setValue(initialOffsetX);
+    setActiveIndex(initialScrollIndex);
   }, [props.data?.length]);
+
+  useLayoutEffect(() => {
+    setItemWidth(itemWidth);
+  }, [itemWidth]);
 
   return (
     <Animated.FlatList
       {...props}
-      ref={refCallback}
+      // FIXME: type issue https://github.com/facebook/react-native/pull/36292
+      ref={(ref) => refCallback && refCallback(ref as any)}
       horizontal
       pagingEnabled={Platform.select({ web: false, default: true })}
       renderItem={renderItem}
@@ -202,7 +218,7 @@ export function getTranslateYOutputRange({
   const size = slideCount + 1;
   const center = Math.floor(size / 2);
 
-  if (verticalAlign === 'bottom') {
+  if (verticalAlign === 'top') {
     return new Array(size).fill(null).map((_, itemIndex) => {
       const scale = 1 - scaleDownRate * Math.abs(itemIndex - center);
       return (itemHeight - itemHeight / scale) / 2;

@@ -1,6 +1,14 @@
-import React from 'react';
-import { View, Image, StyleSheet, Platform } from 'react-native';
+import React, { useCallback } from 'react';
+import {
+  View,
+  Image,
+  StyleSheet,
+  Platform,
+  FlatList,
+  Animated,
+} from 'react-native';
 import ScaleSwiper from '..';
+import useSwiperRefCallback from '../../../hooks/useSwiperRefCallback';
 import Typo from '../../Typo';
 
 const Basic = () => {
@@ -16,13 +24,18 @@ const Basic = () => {
     'https://dimg.donga.com/wps/NEWS/IMAGE/2022/12/30/117225530.2.jpg',
   ];
 
+  const { ref, refCallback } = useSwiperRefCallback<string>();
+
   return (
     <View>
       <Typo.H1 text={'Basic'} />
       <ScaleSwiper.Provider>
         <ScaleSwiper.FlatList
           data={data}
+          refCallback={refCallback}
           transform={'scale'}
+          // slideCount={Platform.select({ web: 4, default: 2 })}
+          verticalAlign={'top'}
           itemHeight={(width) =>
             width * Platform.select({ web: 1.3, default: 2 })
           }
@@ -37,6 +50,27 @@ const Basic = () => {
               <Image style={StyleSheet.absoluteFill} source={{ uri: item }} />
             </View>
           )}
+        />
+        <ScaleSwiper.DotIndicator
+          onPress={(index) => {
+            ref.current?.scrollToIndex({ index, animated: true });
+          }}
+        />
+
+        <FlatList
+          data={[1, 2, 3]}
+          renderItem={() => <></>}
+          ref={(ref) => {
+            ref?.scrollToIndex({ index: 1 });
+          }}
+        />
+
+        <Animated.FlatList
+          data={[1, 2, 3]}
+          renderItem={() => <></>}
+          ref={(ref) => {
+            ref?.scrollToIndex({ index: 1 });
+          }}
         />
       </ScaleSwiper.Provider>
     </View>
