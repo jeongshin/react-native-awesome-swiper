@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import useSwiperContext from '../../hooks/useSwiperContext';
 
-interface DotIndicatorProps {
+export interface DotIndicatorProps {
   onPress?: (index: number) => void;
   gap?: number;
   style?: StyleProp<ViewStyle>;

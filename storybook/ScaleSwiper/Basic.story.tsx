@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Image, StyleSheet, Platform } from 'react-native';
-import ScaleSwiper from '..';
-import useSwiperRefCallback from '../../../hooks/useSwiperRefCallback';
-import Typo from '../../Typo';
+import ScaleSwiper from '../../packages/components/ScaleSwiper';
+import Typo from '../../packages/components/Typo';
+import useSwiperRefCallback from '../../packages/hooks/useSwiperRefCallback';
 
 const Basic = () => {
   const data = [

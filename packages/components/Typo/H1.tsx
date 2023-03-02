@@ -8,7 +8,7 @@ import {
   StyleSheet,
 } from 'react-native';
 
-interface H1Props {
+export interface H1Props {
   text: string;
   containerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<TextStyle>;

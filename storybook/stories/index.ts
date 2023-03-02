@@ -1,1 +1,1 @@
-import '../../packages/components/ScaleSwiper/stories/ScaleSwiper.stories';
+import '../ScaleSwiper/ScaleSwiper.stories';
