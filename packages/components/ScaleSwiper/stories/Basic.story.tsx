@@ -27,7 +27,7 @@ const Basic = () => {
           data={data}
           refCallback={refCallback}
           transform={'scale'}
-          // slideCount={Platform.select({ web: 4, default: 2 })}
+          slideCount={Platform.select({ web: 4, default: 2 })}
           verticalAlign={'top'}
           itemHeight={(width) =>
             width * Platform.select({ web: 1.3, default: 2 })

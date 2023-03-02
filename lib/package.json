@@ -1,6 +1,6 @@
 {
-  "description": "react native easy and fancy swiper 🙇🏻‍♂️",
-  "homepage": "",
+  "description": "Swiper UI Library for React Native 🙇🏻‍♂️",
+  "homepage": "https://docs.react-native-awesome-swiper.site",
   "repository": "https://github.com/JeongShin/react-native-awesome-swiper",
   "author": "JeongShin (https://github.com/JeongShin)",
   "name": "react-native-awesome-swiper",
@@ -11,7 +11,8 @@
     "react",
     "react-native",
     "swiper",
-    "slider"
+    "slider",
+    "carousel"
   ],
   "peerDependencies": {
     "react": "*",

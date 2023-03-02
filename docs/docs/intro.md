@@ -28,7 +28,7 @@ npm install react-native-awesome-swiper
 
 ## Storybook 📚
 
-See our [storybook](https://silly-kleicha-72e9c9.netlify.app/)
+See our [Storybook](https://react-native-awesome-swiper.site/)
 
 ## Dependencies ☝🏻
 
@@ -37,5 +37,5 @@ See our [storybook](https://silly-kleicha-72e9c9.netlify.app/)
 
 ## Next 🚀
 
-- [ ] CubeSwiper (like Instagram Story)
 - [ ] InfiniteCarouselSwiper
+- [ ] CubeSwiper (like Instagram Story)
