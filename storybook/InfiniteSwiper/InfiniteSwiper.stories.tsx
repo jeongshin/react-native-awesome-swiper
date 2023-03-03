@@ -5,7 +5,7 @@ import Basic from './Basic.story';
 import { storybookWebSettingsDecorator } from '../storybook.utils';
 
 export default {
-  title: 'ScaleSwiper',
+  title: 'InfiniteSwiper',
 };
 
 const BasicStory = (): ReactElement => {
@@ -16,6 +16,6 @@ const BasicStory = (): ReactElement => {
   );
 };
 
-storiesOf('ScaleSwiper', module)
+storiesOf('InfiniteSwiper', module)
   .addDecorator(storybookWebSettingsDecorator)
   .add('Basic', () => <BasicStory />, {});

@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import useUpdateSwiperContext from '../../hooks/useUpdateSwiperContext';
 import logger from '../../logger';
+import { getItemLayoutFactory } from '../../utils';
 
 export interface ScaleSwiperProps<Item>
   extends Animated.AnimatedProps<FlatListProps<Item>> {
@@ -162,14 +163,6 @@ function ScaleSwiper<T>({
       ]}
     />
   );
-}
-
-function getItemLayoutFactory<T>(size: number) {
-  return (_: T, index: number) => ({
-    length: size,
-    offset: size * index,
-    index,
-  });
 }
 
 export function getInputRange({

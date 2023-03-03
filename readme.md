@@ -1,5 +1,7 @@
 # react-native-awesome-swiper
 
+![blue](./docs/static/img/blue-jerry-3.png)
+
 # Getting Started
 
 ![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS-brightgreen.svg?style=flat-square&colorB=191A17)
