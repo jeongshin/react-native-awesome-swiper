@@ -151,7 +151,6 @@ function ScaleSwiper<T>({
       snapToInterval={itemWidth}
       snapToAlignment={Platform.select({
         ios: 'start',
-        android: 'center',
         web: 'start',
       })}
       contentContainerStyle={[

@@ -17,62 +17,72 @@ import {
   View,
 } from 'react-native';
 import useInterval from '../../hooks/useInterval';
-import useUpdateSwiperContext from '../../hooks/useUpdateSwiperContext';
 import { getItemLayoutFactory } from '../../utils';
+// import useDebounce from '../../hooks/useDebounce';
 
-export interface InfiniteSwiperProps<Item>
-  extends Animated.AnimatedProps<FlatListProps<Item>> {
+export interface InfiniteSwiperProps<Item> extends FlatListProps<Item> {
+  data: Item[];
   autoPlay?: boolean;
   duration?: number;
-  width?: number | 'fit-screen';
+  width?: number;
   height?: number;
   initialScrollIndex?: number;
   refCallback?: (ref: FlatList<Item>) => void;
 }
 
+/**
+ * TODO:
+ *
+ * - add docs
+ * - web support
+ * - support vertical
+ * - android conditional flickering
+ * - add indicator
+ */
 function InfiniteSwiper<T>({
   data: _data,
   style,
   renderItem: _renderItem,
-  width: _width = 'fit-screen',
+  width: _width,
   refCallback,
+  decelerationRate,
   onScroll: _onScroll,
   height = 200,
-  autoPlay = true,
-  duration = 2000,
+  autoPlay = false,
+  duration = 4000,
+  horizontal = true,
   getItemLayout: _getItemLayout,
-  initialScrollIndex = 0,
+  onScrollBeginDrag,
+  onScrollEndDrag,
+  initialScrollIndex = _data?.length || 0,
   ...props
 }: InfiniteSwiperProps<T>) {
-  const innerRef = useRef<FlatList | null>(null);
-
-  const totalItems = useRef(0);
-
-  const [activeIndex, setActiveIndex] = useState(initialScrollIndex);
-
-  const { scrollX } = useUpdateSwiperContext();
+  const [paused, setPaused] = useState(false);
 
   const { width: windowWidth } = useWindowDimensions();
 
-  const itemWidth = _width === 'fit-screen' ? windowWidth : _width;
+  const width = _width ?? windowWidth;
 
-  const getItemLayout = _getItemLayout ?? getItemLayoutFactory(itemWidth);
+  const internalRef = useRef<FlatList | null>(null);
 
-  const data = useMemo(() => {
-    const clonedData = cloneData(_data);
-    totalItems.current = clonedData.length;
-    return clonedData;
-  }, [_data]);
+  const [activeIndex, setAccurateActiveIndex] =
+    useState<number>(initialScrollIndex);
+
+  const scroll = useRef(new Animated.Value(initialScrollIndex * width)).current;
+
+  const getItemLayout = _getItemLayout ?? getItemLayoutFactory(width);
+
+  const data = useMemo(() => cloneData(_data), [_data]);
 
   const renderItem: ListRenderItem<T> = useCallback(
     ({ item, index, separators }) => {
       return (
-        <View style={{ width: itemWidth, height }}>
+        <View style={{ width, height }}>
           {_renderItem && _renderItem({ item, index, separators })}
         </View>
       );
     },
-    [_renderItem, itemWidth, height],
+    [_renderItem, width, height],
   );
 
   const handleScroll = useMemo<Animated.FlatList['props']['onScroll']>(
@@ -81,7 +91,7 @@ function InfiniteSwiper<T>({
         [
           {
             nativeEvent: {
-              contentOffset: { x: scrollX },
+              contentOffset: { x: scroll },
             },
           },
         ],
@@ -89,60 +99,89 @@ function InfiniteSwiper<T>({
           useNativeDriver: Platform.select({ web: false, default: true }),
           listener: (e: NativeSyntheticEvent<NativeScrollEvent>) => {
             _onScroll && _onScroll(e);
-            const index = e.nativeEvent.contentOffset.x / itemWidth;
-            if (!Number.isInteger(index)) return;
-            setActiveIndex(index);
+            const offset = e.nativeEvent.contentOffset.x;
+            const index = offset / width;
+            setAccurateActiveIndex((prev) =>
+              getIndexConsiderErrorRange(index, prev),
+            );
           },
         },
       ),
-    [itemWidth],
+    [width],
   );
 
   useEffect(() => {
+    if (!_data?.length) return;
+
     const { shouldAdjust, toIndex } = shouldAdjustPosition(
       activeIndex,
-      totalItems.current,
+      _data?.length,
     );
 
     if (!shouldAdjust) return;
 
-    innerRef.current?.scrollToIndex({ index: toIndex, animated: false });
-  }, [activeIndex]);
+    internalRef.current?.scrollToIndex({
+      index: toIndex,
+      viewOffset: 0,
+      viewPosition: 0,
+      animated: false,
+    });
+  }, [activeIndex, _data?.length]);
 
   useInterval(
     useCallback(() => {
-      if (!innerRef.current) return;
-      innerRef.current.scrollToIndex({
+      if (!internalRef.current) return;
+      internalRef.current.scrollToIndex({
         index: getNextIndex(data.length, activeIndex),
         animated: true,
       });
     }, [data.length, activeIndex]),
-    autoPlay ? duration : undefined,
+    autoPlay ? (paused ? undefined : duration) : undefined,
   );
 
   return (
     <Animated.FlatList
+      showsHorizontalScrollIndicator={false}
+      bounces={false}
       {...props}
+      // @ts-ignore
+      data={data}
       // FIXME: type issue https://github.com/facebook/react-native/pull/36292
       ref={(ref) => {
-        innerRef.current = ref as any;
+        internalRef.current = ref as any;
         refCallback && refCallback(ref as any);
       }}
-      horizontal
+      horizontal={horizontal}
       onScroll={handleScroll}
-      data={data}
       pagingEnabled
+      initialScrollIndex={initialScrollIndex}
       scrollEventThrottle={16}
-      decelerationRate={'fast'}
-      snapToInterval={itemWidth}
+      decelerationRate={decelerationRate ?? 0.9}
+      snapToInterval={width}
       renderItem={renderItem}
       getItemLayout={getItemLayout}
-      style={[style, { width: itemWidth, height }]}
+      style={[style, { width, height }]}
+      onScrollBeginDrag={(e) => {
+        onScrollBeginDrag && onScrollBeginDrag(e);
+        setPaused(true);
+      }}
+      onScrollEndDrag={(e) => {
+        onScrollEndDrag && onScrollEndDrag(e);
+        setPaused(false);
+      }}
     />
   );
 }
 
-const CLONE_SETS = 3;
+function getIndexConsiderErrorRange(nextValue: number, prevValue: number) {
+  const error = Math.abs((Math.round(nextValue) - nextValue) * 100);
+
+  if (error < 1) {
+    return Math.round(nextValue);
+  }
+
+  return prevValue;
+}
 
 export function getNextIndex(totalItemLength: number, activeIndex: number) {
   return (activeIndex + 1) % totalItemLength;
@@ -150,7 +189,7 @@ export function getNextIndex(totalItemLength: number, activeIndex: number) {
 
 export function shouldAdjustPosition(
   activeIndex: number,
-  totalItems: number,
+  itemCount: number,
 ):
   | {
       shouldAdjust: true;
@@ -160,29 +199,22 @@ export function shouldAdjustPosition(
       shouldAdjust: false;
       toIndex: null;
     } {
-  const isPivot = activeIndex === 0 || totalItems - totalItems / CLONE_SETS;
+  const isPivot = activeIndex === 0 || activeIndex === itemCount * 2;
 
-  if (isPivot)
+  if (isPivot) {
     return {
       shouldAdjust: true,
-      toIndex: totalItems - (totalItems / CLONE_SETS) * (CLONE_SETS - 1),
+      toIndex: itemCount,
     };
+  }
 
   return { shouldAdjust: false, toIndex: null };
 }
 
-export function cloneData<T extends any[], P extends readonly any[]>(
-  data: P | null | undefined,
-): T {
-  if (!data) return [] as unknown as T;
-
-  const result = Array.from(data) as T;
-
-  for (let i = 1; i < CLONE_SETS; i++) {
-    result.push(...data);
-  }
-
-  return result;
+export function cloneData<T extends any[]>(data: T) {
+  if (!Array.isArray(data) || data.length === 0) return [];
+  if (data.length === 1) return data;
+  return [...data, ...data, data[0]];
 }
 
 export default InfiniteSwiper;
