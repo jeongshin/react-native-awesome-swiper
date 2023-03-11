@@ -6,3 +6,8 @@ export {
 export { default as useRefCallback } from './hooks/useSwiperRefCallback';
 
 export { default as useSwiperContext } from './hooks/useSwiperContext';
+
+export {
+  default as InfiniteSwiper,
+  InfiniteSwiperProps,
+} from './components/InfiniteSwiper';

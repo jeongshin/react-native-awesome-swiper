@@ -5,7 +5,7 @@ const useSwiperContext = () => {
   const context = useContext(SwiperContext);
 
   if (!context) {
-    throw Error('useSwiperContext must be inside Provider');
+    throw Error(`useSwiperContext must be inside Swiper Context Provider`);
   }
 
   return context;
