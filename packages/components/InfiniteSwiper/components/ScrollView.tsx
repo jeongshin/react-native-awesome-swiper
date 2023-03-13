@@ -14,8 +14,8 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import useDebouncedCallback from '../../hooks/useDebounce';
-import useInterval from '../../hooks/useInterval';
+import useDebouncedCallback from '../../../hooks/useDebounce';
+import useInterval from '../../../hooks/useInterval';
 
 export interface InfiniteSwiperProps<Item> extends ScrollViewProps {
   data: Item[];

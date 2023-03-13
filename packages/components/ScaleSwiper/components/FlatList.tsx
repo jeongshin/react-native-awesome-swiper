@@ -9,9 +9,9 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from 'react-native';
-import useUpdateSwiperContext from '../../hooks/useUpdateSwiperContext';
-import logger from '../../logger';
-import { getItemLayoutFactory } from '../../utils';
+import logger from '../../../logger';
+import { getItemLayoutFactory } from '../../../utils';
+import useUpdateSwiperContext from '../hooks/useUpdateSwiperContext';
 
 export interface ScaleSwiperProps<Item>
   extends Animated.AnimatedProps<FlatListProps<Item>> {

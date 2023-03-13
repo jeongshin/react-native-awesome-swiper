@@ -16,8 +16,8 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import useInterval from '../../hooks/useInterval';
-import { getItemLayoutFactory } from '../../utils';
+import useInterval from '../../../hooks/useInterval';
+import { getItemLayoutFactory } from '../../../utils';
 
 /**
  * TODO: use flat-list when android flickering issue resolved

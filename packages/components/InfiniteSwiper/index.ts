@@ -1,8 +1,8 @@
-import ScrollView from './ScrollView';
+import ScrollView from './components/ScrollView';
 export type {
   InfiniteSwiperProps,
   InfiniteSwiperRenderItem,
-} from './ScrollView';
+} from './components/ScrollView';
 
 export default {
   ScrollView,

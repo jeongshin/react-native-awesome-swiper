@@ -3,9 +3,9 @@ export {
   ScaleSwiperProps,
 } from './components/ScaleSwiper';
 
-export { default as useRefCallback } from './hooks/useSwiperRefCallback';
+export { default as useRefCallback } from './hooks/useRefCallback';
 
-export { default as useSwiperContext } from './hooks/useSwiperContext';
+export { default as useSwiperContext } from './components/ScaleSwiper/hooks/useSwiperContext';
 
 export {
   default as InfiniteSwiper,

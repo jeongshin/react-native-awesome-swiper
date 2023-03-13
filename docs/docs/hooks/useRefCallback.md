@@ -1,8 +1,8 @@
-# useSwiperRefCallback
+# useRefCallback
 
 ## Overview
 
-`useSwiperRefCallback` is hooks to use `ref` of FlatList.
+`useRefCallback` is hooks to use `ref` of FlatList.
 
 use generic for data type.
 
@@ -16,7 +16,7 @@ type MyDataType = string;
 const MyItem = () => {
   const data: MyDataType[] = ['1', '2', '3'];
 
-  const { ref, refCallback } = useSwiperRefCallback<MyDataType>();
+  const { ref, refCallback } = useRefCallback<FlatList<MyDataType>>();
 
   useEffect(() => {
     ref.current?.scrollToIndex({ index: 1, animated: true });

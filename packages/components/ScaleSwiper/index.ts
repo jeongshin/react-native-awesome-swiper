@@ -1,7 +1,7 @@
-import FlatList from './FlatList';
-export type { ScaleSwiperProps } from './FlatList';
-import Provider from '../../contexts/Provider';
-import DotIndicator from '../DotIndicator';
+import DotIndicator from './components/DotIndicator';
+import FlatList from './components/FlatList';
+export type { ScaleSwiperProps } from './components/FlatList';
+import Provider from './context/Provider';
 
 export default {
   FlatList,
