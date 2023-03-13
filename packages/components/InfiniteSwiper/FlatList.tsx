@@ -7,26 +7,29 @@ import React, {
 } from 'react';
 import {
   Animated,
+  FlatList,
+  FlatListProps,
+  ListRenderItem,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  ScrollView,
-  ScrollViewProps,
+  Platform,
   useWindowDimensions,
   View,
 } from 'react-native';
-import useDebouncedCallback from '../../hooks/useDebounce';
 import useInterval from '../../hooks/useInterval';
+import { getItemLayoutFactory } from '../../utils';
 
-export interface InfiniteSwiperProps<Item> extends ScrollViewProps {
+/**
+ * TODO: use flat-list when android flickering issue resolved
+ */
+export interface InfiniteSwiperProps<Item> extends FlatListProps<Item> {
   data: Item[];
   autoPlay?: boolean;
   duration?: number;
   width?: number;
   height?: number;
   initialScrollIndex?: number;
-  refCallback?: (ref: ScrollView) => void;
-  keyExtractor?: (item: Item, index: number) => string;
-  renderItem: (info: { item: Item; index: number }) => React.ReactElement;
+  refCallback?: (ref: FlatList<Item>) => void;
 }
 
 /**
@@ -41,16 +44,16 @@ export interface InfiniteSwiperProps<Item> extends ScrollViewProps {
 function InfiniteSwiper<T>({
   data: _data,
   style,
-  renderItem,
+  renderItem: _renderItem,
   width: _width,
   refCallback,
   decelerationRate,
   onScroll: _onScroll,
   height = 200,
   autoPlay = false,
-  duration = 2000,
+  duration = 4000,
   horizontal = true,
-  keyExtractor,
+  getItemLayout: _getItemLayout,
   onScrollBeginDrag,
   onScrollEndDrag,
   initialScrollIndex = _data?.length || 0,
@@ -62,15 +65,27 @@ function InfiniteSwiper<T>({
 
   const width = _width ?? windowWidth;
 
-  const internalRef = useRef<ScrollView | null>(null);
+  const internalRef = useRef<FlatList | null>(null);
 
-  const [activeIndex, setAccurateIndex] = useState<number>(initialScrollIndex);
-
-  const { debounceCallback } = useDebouncedCallback();
+  const [activeIndex, setAccurateActiveIndex] =
+    useState<number>(initialScrollIndex);
 
   const scroll = useRef(new Animated.Value(initialScrollIndex * width)).current;
 
+  const getItemLayout = _getItemLayout ?? getItemLayoutFactory(width);
+
   const data = useMemo(() => cloneData(_data), [_data]);
+
+  const renderItem: ListRenderItem<T> = useCallback(
+    ({ item, index, separators }) => {
+      return (
+        <View style={{ width, height }}>
+          {_renderItem && _renderItem({ item, index, separators })}
+        </View>
+      );
+    },
+    [_renderItem, width, height],
+  );
 
   const handleScroll = useMemo<Animated.FlatList['props']['onScroll']>(
     () =>
@@ -83,12 +98,14 @@ function InfiniteSwiper<T>({
           },
         ],
         {
-          useNativeDriver: false,
+          useNativeDriver: Platform.select({ web: false, default: true }),
           listener: (e: NativeSyntheticEvent<NativeScrollEvent>) => {
             _onScroll && _onScroll(e);
             const offset = e.nativeEvent.contentOffset.x;
             const index = offset / width;
-            debounceCallback(() => setAccurateIndex(index), 16);
+            setAccurateActiveIndex((prev) =>
+              getIndexConsiderErrorRange(index, prev),
+            );
           },
         },
       ),
@@ -98,16 +115,17 @@ function InfiniteSwiper<T>({
   useEffect(() => {
     if (!_data?.length) return;
 
-    const shouldAdjust = shouldAdjustPosition(
-      Math.round(activeIndex),
+    const { shouldAdjust, toIndex } = shouldAdjustPosition(
+      activeIndex,
       _data?.length,
     );
 
     if (!shouldAdjust) return;
 
-    internalRef.current?.scrollTo({
-      x: width * initialScrollIndex,
-      y: 0,
+    internalRef.current?.scrollToIndex({
+      index: toIndex,
+      viewOffset: 0,
+      viewPosition: 0,
       animated: false,
     });
   }, [activeIndex, _data?.length]);
@@ -115,10 +133,8 @@ function InfiniteSwiper<T>({
   useInterval(
     useCallback(() => {
       if (!internalRef.current) return;
-
-      internalRef.current.scrollTo({
-        x: getNextIndex(data.length, activeIndex) * width,
-        y: 0,
+      internalRef.current.scrollToIndex({
+        index: getNextIndex(data.length, activeIndex),
         animated: true,
       });
     }, [data.length, activeIndex]),
@@ -126,22 +142,26 @@ function InfiniteSwiper<T>({
   );
 
   return (
-    <ScrollView
+    <Animated.FlatList
       showsHorizontalScrollIndicator={false}
       bounces={false}
-      disableIntervalMomentum
       {...props}
+      // @ts-ignore
+      data={data}
+      // FIXME: type issue https://github.com/facebook/react-native/pull/36292
       ref={(ref) => {
-        if (!ref) return;
-        internalRef.current = ref;
-        refCallback && refCallback(ref);
+        internalRef.current = ref as any;
+        refCallback && refCallback(ref as any);
       }}
-      contentOffset={{ x: initialScrollIndex * width, y: 0 }}
       horizontal={horizontal}
       onScroll={handleScroll}
-      scrollEventThrottle={4}
-      decelerationRate={decelerationRate ?? 'fast'}
-      snapToOffsets={data.map((_, index) => index * width)}
+      pagingEnabled
+      initialScrollIndex={initialScrollIndex}
+      scrollEventThrottle={16}
+      decelerationRate={decelerationRate ?? 0.9}
+      snapToInterval={width}
+      renderItem={renderItem}
+      getItemLayout={getItemLayout}
       style={[style, { width, height }]}
       onScrollBeginDrag={(e) => {
         onScrollBeginDrag && onScrollBeginDrag(e);
@@ -150,18 +170,19 @@ function InfiniteSwiper<T>({
       onScrollEndDrag={(e) => {
         onScrollEndDrag && onScrollEndDrag(e);
         setPaused(false);
-      }}>
-      {data.map((item, index) => {
-        return (
-          <View
-            style={{ width, height }}
-            key={keyExtractor ? keyExtractor(item, index) : index.toString()}>
-            {renderItem && renderItem({ item, index })}
-          </View>
-        );
-      })}
-    </ScrollView>
+      }}
+    />
   );
+}
+
+function getIndexConsiderErrorRange(nextValue: number, prevValue: number) {
+  const error = Math.abs((Math.round(nextValue) - nextValue) * 100);
+
+  if (error < 1) {
+    return Math.round(nextValue);
+  }
+
+  return prevValue;
 }
 
 export function getNextIndex(totalItemLength: number, activeIndex: number) {
@@ -171,8 +192,25 @@ export function getNextIndex(totalItemLength: number, activeIndex: number) {
 export function shouldAdjustPosition(
   activeIndex: number,
   itemCount: number,
-): boolean {
-  return activeIndex === 0 || activeIndex === itemCount * 2;
+):
+  | {
+      shouldAdjust: true;
+      toIndex: number;
+    }
+  | {
+      shouldAdjust: false;
+      toIndex: null;
+    } {
+  const isPivot = activeIndex === 0 || activeIndex === itemCount * 2;
+
+  if (isPivot) {
+    return {
+      shouldAdjust: true,
+      toIndex: itemCount,
+    };
+  }
+
+  return { shouldAdjust: false, toIndex: null };
 }
 
 export function cloneData<T extends any[]>(data: T) {

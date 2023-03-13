@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react';
-import { ListRenderItem, View, Image, StyleSheet } from 'react-native';
-import InfiniteSwiper from '../../packages/components/InfiniteSwiper';
-import Typo from '../../packages/components/Typo';
-import useSwiperRefCallback from '../../packages/hooks/useSwiperRefCallback';
+import { View, Image, StyleSheet } from 'react-native';
+import InfiniteSwiper, {
+  InfiniteSwiperRenderItem,
+} from '../../packages/components/InfiniteSwiper';
+import Typo from '../Typo';
 
 const Basic = () => {
   const data = [
@@ -11,9 +12,7 @@ const Basic = () => {
     'https://pbs.twimg.com/media/FoR4kypaMAA0Nm9?format=jpg&name=4096x4096',
   ];
 
-  const { ref, refCallback } = useSwiperRefCallback<string>();
-
-  const renderItem: ListRenderItem<string> = useCallback(
+  const renderItem: InfiniteSwiperRenderItem<string> = useCallback(
     ({ item }) => (
       <View
         style={{ width: '100%', height: '100%', backgroundColor: 'skyblue' }}>
@@ -30,10 +29,19 @@ const Basic = () => {
 
   return (
     <View>
-      <Typo.H1 text={'Basic (web not supported)'} />
-      <InfiniteSwiper.FlatList
+      <Typo.H1 text={'(web not supported 🥲)'} />
+      <Typo.H1 text={'Horizontal'} />
+      <InfiniteSwiper.ScrollView
         data={data}
         autoPlay
+        renderItem={renderItem}
+        height={200}
+      />
+      <Typo.H1 text={'Vertical'} />
+      <InfiniteSwiper.ScrollView
+        data={data}
+        autoPlay
+        horizontal={false}
         renderItem={renderItem}
         height={200}
       />

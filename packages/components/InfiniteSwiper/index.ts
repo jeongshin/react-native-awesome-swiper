@@ -1,6 +1,9 @@
-import FlatList from './FlatList';
-export type { InfiniteSwiperProps } from './FlatList';
+import ScrollView from './ScrollView';
+export type {
+  InfiniteSwiperProps,
+  InfiniteSwiperRenderItem,
+} from './ScrollView';
 
 export default {
-  FlatList,
+  ScrollView,
 };

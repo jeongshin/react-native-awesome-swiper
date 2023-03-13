@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Image, StyleSheet, Platform } from 'react-native';
 import ScaleSwiper from '../../packages/components/ScaleSwiper';
-import Typo from '../../packages/components/Typo';
+import Typo from '../Typo';
 import useSwiperRefCallback from '../../packages/hooks/useSwiperRefCallback';
 
 const Basic = () => {
