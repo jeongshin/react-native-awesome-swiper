@@ -2,14 +2,12 @@
 
 ## Overview
 
-`useRefCallback` is hooks to use `ref` of FlatList.
-
-use generic for data type.
+`useRefCallback` is hooks to use `ref` easily.
 
 ## Example
 
 ```tsx
-import { useAnimatedFlatListRef } from 'react-native-awesome-swiper';
+import { useRefCallback } from 'react-native-awesome-swiper';
 
 type MyDataType = string;
 
