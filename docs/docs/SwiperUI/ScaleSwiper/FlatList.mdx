@@ -1,11 +1,17 @@
-import gif from '../../static/gif/scale_swiper_basic.gif';
-import basic from '../../static/scale-swiper-samples/vertical-center.png';
-import slide4 from '../../static/scale-swiper-samples/slide-count-4.png';
-import scaleDown from '../../static/scale-swiper-samples/scale-down-rate.png';
-// import verticalBottom from '../../static/scale-swiper-samples/vertical-bottom.gif';
-// import verticalTop from '../../static/scale-swiper-samples/vertical-top.gif';
+import gif from '../../../static/gif/scale_swiper_basic.gif';
+import basic from '../../../static/scale-swiper-samples/vertical-center.png';
+import slide4 from '../../../static/scale-swiper-samples/slide-count-4.png';
+import scaleDown from '../../../static/scale-swiper-samples/scale-down-rate.png';
+// import verticalBottom from '../../../static/scale-swiper-samples/vertical-bottom.gif';
+// import verticalTop from '../../../static/scale-swiper-samples/vertical-top.gif';
 
-# ScaleSwiper
+# FlatList ⭐️
+
+## Platform
+
+| iOS | Android | Web |
+| :-: | :-----: | :-: |
+|  O  |    O    |  △  |
 
 ## Overview
 
@@ -13,10 +19,7 @@ import scaleDown from '../../static/scale-swiper-samples/scale-down-rate.png';
   <img src={gif} className="sample-gif-img" alt="scale-swiper-example" />
 </div>
 
-- `Provider` required to render FlatList
-- `pagingEnabled` props not working on web.
-
-Basic usage
+### Basic usage
 
 ```tsx title="ScaleSwiper.tsx"
 import { ScaleSwiper } from 'react-native-awesome-swiper';
@@ -48,6 +51,10 @@ const Component = () => {
   );
 };
 ```
+
+### Issues ✍️
+
+- `pagingEnabled` props not working on web.
 
 ## Props
 

@@ -1,6 +1,13 @@
-import FlatList from './FlatList';
-export type { InfiniteSwiperProps } from './FlatList';
+import DotIndicator from './components/DotIndicator';
+import ScrollView from './components/ScrollView';
+export type {
+  InfiniteSwiperProps,
+  InfiniteSwiperRenderItem,
+} from './components/ScrollView';
+import Provider from './context/Provider';
 
 export default {
-  FlatList,
+  ScrollView,
+  Provider,
+  DotIndicator,
 };

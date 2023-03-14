@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Pressable,
 } from 'react-native';
-import useSwiperContext from '../../hooks/useSwiperContext';
+import useSwiperContext from '../hooks/useSwiperContext';
 
 export interface DotIndicatorProps {
   onPress?: (index: number) => void;

@@ -16,10 +16,12 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import useInterval from '../../hooks/useInterval';
-import { getItemLayoutFactory } from '../../utils';
-// import useDebounce from '../../hooks/useDebounce';
+import useInterval from '../../../hooks/useInterval';
+import { getItemLayoutFactory } from '../../../utils';
 
+/**
+ * TODO: use flat-list when android flickering issue resolved
+ */
 export interface InfiniteSwiperProps<Item> extends FlatListProps<Item> {
   data: Item[];
   autoPlay?: boolean;

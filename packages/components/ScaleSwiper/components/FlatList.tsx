@@ -9,9 +9,9 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from 'react-native';
-import useUpdateSwiperContext from '../../hooks/useUpdateSwiperContext';
-import logger from '../../logger';
-import { getItemLayoutFactory } from '../../utils';
+import logger from '../../../logger';
+import { getItemLayoutFactory } from '../../../utils';
+import useUpdateSwiperContext from '../hooks/useUpdateSwiperContext';
 
 export interface ScaleSwiperProps<Item>
   extends Animated.AnimatedProps<FlatListProps<Item>> {
@@ -138,7 +138,11 @@ function ScaleSwiper<T>({
   return (
     <Animated.FlatList
       {...props}
-      // FIXME: type issue https://github.com/facebook/react-native/pull/36292
+      /**
+       * FIXME: type issue
+       * @see
+       * https://github.com/facebook/react-native/pull/36292
+       */
       ref={(ref) => refCallback && refCallback(ref as any)}
       horizontal
       pagingEnabled={Platform.select({ web: false, default: true })}

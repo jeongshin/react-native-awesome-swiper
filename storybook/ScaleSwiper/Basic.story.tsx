@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Image, StyleSheet, Platform } from 'react-native';
+import { View, Image, StyleSheet, Platform, FlatList } from 'react-native';
 import ScaleSwiper from '../../packages/components/ScaleSwiper';
-import Typo from '../../packages/components/Typo';
-import useSwiperRefCallback from '../../packages/hooks/useSwiperRefCallback';
+import useRefCallback from '../../packages/hooks/useRefCallback';
+import Typo from '../Typo';
 
 const Basic = () => {
   const data = [
@@ -17,7 +17,7 @@ const Basic = () => {
     'https://dimg.donga.com/wps/NEWS/IMAGE/2022/12/30/117225530.2.jpg',
   ];
 
-  const { ref, refCallback } = useSwiperRefCallback<string>();
+  const { ref, refCallback } = useRefCallback<FlatList<string>>();
 
   return (
     <View>

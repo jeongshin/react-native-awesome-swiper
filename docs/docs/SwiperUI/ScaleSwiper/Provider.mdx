@@ -1,8 +1,8 @@
-# useSwiperContext
+# Provider
 
 ## Overview
 
-`useSwiperContext` is hooks to read internal context of swiper
+`useSwiperContext` is hooks to read internal context of scale swiper
 
 ## Type
 
@@ -20,9 +20,8 @@ interface SwiperContextType {
 ```tsx
 import { useSwiperContext } from 'react-native-awesome-swiper';
 
-const MyItem = () => {
+const UI = () => {
   const { itemCount, itemWidth, scrollX, activeIndex } = useSwiperContext();
-
   return <View />;
 };
 ```
