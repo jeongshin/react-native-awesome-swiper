@@ -18,7 +18,7 @@ const config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  // organizationName: 'JeongShin', // Usually your GitHub org/user name.
+  // organizationName: 'jeongshin', // Usually your GitHub org/user name.
   // projectName: 'react-native-awesome-swiper', // Usually your repo name.
   // trailingSlash: false,
   // deploymentBranch: 'gh-pages',
@@ -43,14 +43,14 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/JeongShin/react-native-awesome-swiper/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/jeongshin/react-native-awesome-swiper/tree/main/packages/create-docusaurus/templates/shared/',
         },
         // blog: {
         //   showReadingTime: true,
         //   // Please change this to your repo.
         //   // Remove this to remove the "edit this page" links.
         //   editUrl:
-        //     'https://github.com/JeongShin/react-native-awesome-swiper/tree/main/packages/create-docusaurus/templates/shared/',
+        //     'https://github.com/jeongshin/react-native-awesome-swiper/tree/main/packages/create-docusaurus/templates/shared/',
         // },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -79,7 +79,7 @@ const config = {
           },
           // { to: '/blog', label: 'Blog', position: 'left' },
           {
-            href: 'https://github.com/JeongShin/react-native-awesome-swiper',
+            href: 'https://github.com/jeongshin/react-native-awesome-swiper',
             label: 'GitHub',
             position: 'right',
           },
@@ -102,7 +102,7 @@ const config = {
             items: [
               {
                 label: 'Issues',
-                href: 'https://github.com/JeongShin/react-native-awesome-swiper/issues',
+                href: 'https://github.com/jeongshin/react-native-awesome-swiper/issues',
               },
               // {
               //   label: 'Twitter',
@@ -119,12 +119,12 @@ const config = {
               // },
               {
                 label: 'GitHub',
-                href: 'https://github.com/JeongShin/react-native-awesome-swiper',
+                href: 'https://github.com/jeongshin/react-native-awesome-swiper',
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} Jerry(JeongShin). Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Jerry(jeongshin). Built with Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,

@@ -3,8 +3,8 @@
   "main": "node_modules/expo/AppEntry.js",
   "version": "1.0.0",
   "homepage": "https://react-native-awesome-swiper.site",
-  "repository": "https://github.com/JeongShin/react-native-awesome-swiper",
-  "author": "JeongShin (https://github.com/JeongShin)",
+  "repository": "https://github.com/jeongshin/react-native-awesome-swiper",
+  "author": "jeongshin (https://github.com/jeongshin)",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",

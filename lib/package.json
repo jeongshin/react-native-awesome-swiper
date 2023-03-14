@@ -1,8 +1,8 @@
 {
   "description": "Swiper UI Library for React Native 🙇🏻‍♂️",
   "homepage": "https://docs.react-native-awesome-swiper.site",
-  "repository": "https://github.com/JeongShin/react-native-awesome-swiper",
-  "author": "JeongShin (https://github.com/JeongShin)",
+  "repository": "https://github.com/jeongshin/react-native-awesome-swiper",
+  "author": "jeongshin (https://github.com/jeongshin)",
   "name": "react-native-awesome-swiper",
   "main": "index.js",
   "types": "index.d.ts",
