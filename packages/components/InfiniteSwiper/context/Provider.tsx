@@ -7,7 +7,7 @@ import {
   UpdateSwiperContext,
 } from '.';
 
-interface ProviderProps {
+export interface ProviderProps {
   children?: React.ReactNode;
 }
 
