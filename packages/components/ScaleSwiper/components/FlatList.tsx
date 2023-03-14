@@ -138,7 +138,11 @@ function ScaleSwiper<T>({
   return (
     <Animated.FlatList
       {...props}
-      // FIXME: type issue https://github.com/facebook/react-native/pull/36292
+      /**
+       * FIXME: type issue
+       * @see
+       * https://github.com/facebook/react-native/pull/36292
+       */
       ref={(ref) => refCallback && refCallback(ref as any)}
       horizontal
       pagingEnabled={Platform.select({ web: false, default: true })}

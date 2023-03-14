@@ -1,5 +1,8 @@
 import { useEffect, useRef } from 'react';
 
+/**
+ * basic implement of interval without arguments
+ */
 function useInterval(callback: () => void, delay?: number | undefined) {
   const savedCallback = useRef(callback);
 

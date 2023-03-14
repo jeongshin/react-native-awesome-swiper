@@ -1,6 +1,7 @@
 import React, {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -16,6 +17,7 @@ import {
 } from 'react-native';
 import useDebouncedCallback from '../../../hooks/useDebounce';
 import useInterval from '../../../hooks/useInterval';
+import useUpdateInfiniteSwiperContext from '../hooks/useUpdateInfiniteSwiperContext';
 
 export interface InfiniteSwiperProps<Item> extends ScrollViewProps {
   data: Item[];
@@ -24,7 +26,7 @@ export interface InfiniteSwiperProps<Item> extends ScrollViewProps {
   width?: number;
   height?: number;
   initialScrollIndex?: number;
-  refCallback?: (ref: ScrollView) => void;
+  refCallback?: (ref: ScrollView | Animated.LegacyRef<ScrollView>) => void;
   keyExtractor?: (item: Item, index: number) => string;
   renderItem: InfiniteSwiperRenderItem<Item>;
 }
@@ -57,7 +59,7 @@ function InfiniteSwiper<T>({
   keyExtractor,
   onScrollBeginDrag,
   onScrollEndDrag,
-  initialScrollIndex = _data?.length || 0,
+  initialScrollIndex: _initialScrollIndex,
   ...props
 }: InfiniteSwiperProps<T>) {
   const [paused, setPaused] = useState(false);
@@ -66,16 +68,23 @@ function InfiniteSwiper<T>({
 
   const width = _width ?? windowWidth;
 
+  const initialScrollIndex = (_data?.length || 0) + (_initialScrollIndex || 0);
+
   const internalRef = useRef<ScrollView | null>(null);
 
-  const [activeIndex, setAccurateIndex] = useState<number>(initialScrollIndex);
+  const [activeIndexInFloat, setAccurateIndexInFloat] =
+    useState<number>(initialScrollIndex);
 
   const { debounceCallback } = useDebouncedCallback();
 
-  const scroll = useRef(new Animated.Value(initialScrollIndex * width)).current;
+  const { scroll, setActiveIndex, setItemCount } =
+    useUpdateInfiniteSwiperContext();
 
   const data = useMemo(() => cloneData(_data), [_data]);
 
+  /**
+   * handle scroll
+   */
   const handleScroll = useMemo<Animated.FlatList['props']['onScroll']>(
     () =>
       Animated.event(
@@ -96,22 +105,39 @@ function InfiniteSwiper<T>({
               : e.nativeEvent.contentOffset.y;
 
             const index = offset / (horizontal ? width : height);
-            debounceCallback(() => setAccurateIndex(index), 16);
+            debounceCallback(() => setAccurateIndexInFloat(index), 16);
           },
         },
       ),
     [width, height],
   );
 
+  /**
+   * init scroll position on mount
+   */
+  useLayoutEffect(() => {
+    scroll.setValue(initialScrollIndex * (horizontal ? width : height));
+  }, []);
+
+  useLayoutEffect(() => {
+    setItemCount(_data.length);
+    setActiveIndex(Math.round(activeIndexInFloat) % _data.length);
+  }, [_data.length, Math.round(activeIndexInFloat)]);
+
+  /**
+   * adjust position to center
+   */
   useEffect(() => {
     if (!_data?.length) return;
 
-    const shouldAdjust = shouldAdjustPosition(
-      Math.round(activeIndex),
-      _data?.length,
-    );
-
-    if (!shouldAdjust) return;
+    if (
+      !shouldScrollToInitialPosition(
+        Math.round(activeIndexInFloat),
+        _data?.length,
+      )
+    ) {
+      return;
+    }
 
     internalRef.current?.scrollTo(
       horizontal
@@ -126,38 +152,51 @@ function InfiniteSwiper<T>({
             animated: false,
           },
     );
-  }, [activeIndex, _data?.length]);
+  }, [activeIndexInFloat, _data?.length]);
 
+  /**
+   * auto play logic
+   */
   useInterval(
     useCallback(() => {
       if (!internalRef.current) return;
 
+      const nextIndex = getNextIndex(
+        data.length,
+        Math.round(activeIndexInFloat),
+      );
+
       internalRef.current.scrollTo(
         horizontal
           ? {
-              x: getNextIndex(data.length, activeIndex) * width,
+              x: nextIndex * width,
               y: 0,
               animated: true,
             }
           : {
               x: 0,
-              y: getNextIndex(data.length, activeIndex) * height,
+              y: nextIndex * height,
               animated: true,
             },
       );
-    }, [data.length, activeIndex, height, width]),
+    }, [data.length, activeIndexInFloat, height, width]),
     autoPlay ? (paused ? undefined : duration) : undefined,
   );
 
   return (
-    <ScrollView
+    <Animated.ScrollView
       showsHorizontalScrollIndicator={false}
       bounces={false}
       disableIntervalMomentum
       showsVerticalScrollIndicator={false}
       overScrollMode={'never'}
       {...props}
-      ref={(ref) => {
+      /**
+       * FIXME: react native issue scroll view ref
+       * @see
+       * https://github.com/facebook/react-native/pull/36472
+       */
+      ref={(ref: ScrollView | null) => {
         if (!ref) return;
         internalRef.current = ref;
         refCallback && refCallback(ref);
@@ -192,7 +231,7 @@ function InfiniteSwiper<T>({
           </View>
         );
       })}
-    </ScrollView>
+    </Animated.ScrollView>
   );
 }
 
@@ -200,7 +239,7 @@ export function getNextIndex(totalItemLength: number, activeIndex: number) {
   return (activeIndex + 1) % totalItemLength;
 }
 
-export function shouldAdjustPosition(
+export function shouldScrollToInitialPosition(
   activeIndex: number,
   itemCount: number,
 ): boolean {

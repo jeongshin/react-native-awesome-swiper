@@ -31,20 +31,26 @@ const Basic = () => {
     <View>
       <Typo.H1 text={'(web not supported 🥲)'} />
       <Typo.H1 text={'Horizontal'} />
-      <InfiniteSwiper.ScrollView
-        data={data}
-        autoPlay
-        renderItem={renderItem}
-        height={200}
-      />
+      <InfiniteSwiper.Provider>
+        <InfiniteSwiper.ScrollView
+          data={data}
+          autoPlay
+          renderItem={renderItem}
+          height={200}
+        />
+        <InfiniteSwiper.DotIndicator />
+      </InfiniteSwiper.Provider>
       <Typo.H1 text={'Vertical'} />
-      <InfiniteSwiper.ScrollView
-        data={data}
-        autoPlay
-        horizontal={false}
-        renderItem={renderItem}
-        height={200}
-      />
+      <InfiniteSwiper.Provider>
+        <InfiniteSwiper.ScrollView
+          data={data}
+          autoPlay
+          horizontal={false}
+          renderItem={renderItem}
+          height={200}
+        />
+        <InfiniteSwiper.DotIndicator />
+      </InfiniteSwiper.Provider>
     </View>
   );
 };
