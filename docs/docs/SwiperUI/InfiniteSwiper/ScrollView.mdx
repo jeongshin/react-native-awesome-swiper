@@ -1,0 +1,119 @@
+import gif from '../../../static/gif/infinite_swiper_basic.gif';
+
+# ScrollView ⭐️
+
+## Platform
+
+| iOS | Android | Web |
+| :-: | :-----: | :-: |
+|  O  |    O    |  X  |
+
+## Overview
+
+<div className="sample-gif">
+  <img src={gif} className="sample-gif-img" alt="scale-swiper-example" />
+</div>
+
+### Basic usage
+
+```tsx title="ScaleSwiper.tsx"
+import { InfiniteSwiper } from 'react-native-awesome-swiper';
+
+const Component = () => {
+  const data: string[] = [
+    'https://file.mk.co.kr/meet/neds/2022/06/image_readtop_2022_486646_16541333805062545.jpg',
+    'http://file.mk.co.kr/meet/neds/2022/02/image_readtop_2022_104459_16440258224937758.jpg',
+    'https://pbs.twimg.com/media/FoR4kypaMAA0Nm9?format=jpg&name=4096x4096',
+  ];
+
+  return (
+    <InfiniteSwiper.Provider>
+      <InfiniteSwiper.ScrollView
+        autoPlay
+        data={data}
+        renderItem={renderItem}
+        height={200}
+      />
+      <InfiniteSwiper.DotIndicator />
+    </InfiniteSwiper.Provider>
+  );
+};
+```
+
+### Features 🚀
+
+- Infinitely scrollable with repeating given data 🔄
+- Both vertical, horizontal supported
+- Implemented with `Animated.ScrollView` API
+
+### Issues ✍️
+
+- **Fixed width, height required**
+- Can be changed to `Animated.FlatList` api when flickering issue resolved on `scrollToIndex` on Android in the future
+
+## Props
+
+`InfiniteSwiper.ScrollView` extends all [ScrollViewProps](https://reactnative.dev/docs/scrollview)
+
+### `data` \*
+
+Items to render. Generic `Item` inferred from data type.
+
+| Type   | Default   | Required |
+| ------ | --------- | -------- |
+| Item[] | undefined | YES      |
+
+### `renderItem` \*
+
+`renderItem` to customize item UI. Similiar interface with FlatList's `renderItem` API
+
+| Type                            | Default   | Required |
+| ------------------------------- | --------- | -------- |
+| InfiniteSwiperRenderItem<Item\> | undefined | YES      |
+
+```ts
+type InfiniteSwiperRenderItem<Item> = (info: {
+  item: Item;
+  index: number;
+}) => React.ReactElement;
+```
+
+### `autoPlay`
+
+Auto scrollable with given interval
+
+| Type    | Default | Required |
+| ------- | ------- | -------- |
+| boolean | false   | NO       |
+
+### `duration`
+
+Milliseconds to wait scroll to next slide. Should be used with `autoPlay` true.
+
+| Type   | Default | Required |
+| ------ | ------- | -------- |
+| number | 4000    | NO       |
+
+### `initialScrollIndex`
+
+initialScrollIndex in number
+
+| Type   | Default   | Required |
+| ------ | --------- | -------- |
+| number | undefined | NO       |
+
+### `keyExtractor`
+
+Pure function to get unquie item key. index is used internally when omitted (not recommanded).
+
+| Type                                   | Default   | Required |
+| -------------------------------------- | --------- | -------- |
+| (item: Item, index: number) => string; | undefined | NO       |
+
+### `refCallback`
+
+callback to use ScrollView `ref`
+
+| Type                                                         | Default   | Required |
+| ------------------------------------------------------------ | --------- | -------- |
+| (ref: ScrollView \| Animated.LegacyRef<ScrollView\>) => void | undefined | NO       |

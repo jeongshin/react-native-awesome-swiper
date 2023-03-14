@@ -1,0 +1,24 @@
+# Provider
+
+`useInfiniteSwiperContext` is hooks to read internal context of scale swiper
+
+## Type
+
+```ts
+export interface ContextType {
+  itemCount: number;
+  activeIndex: number;
+  scroll: Animated.Value;
+}
+```
+
+## Example
+
+```tsx
+import { useInfiniteSwiperContext } from 'react-native-awesome-swiper';
+
+const UI = () => {
+  const { itemCount, activeIndex, scrollX } = useInfiniteSwiperContext();
+  return <View />;
+};
+```

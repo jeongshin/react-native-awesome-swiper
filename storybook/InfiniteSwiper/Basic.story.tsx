@@ -29,13 +29,14 @@ const Basic = () => {
 
   return (
     <View>
-      <Typo.H1 text={'(web not supported 🥲)'} />
+      <Typo.H3 text={'(web not supported 🥲)'} />
       <Typo.H1 text={'Horizontal'} />
       <InfiniteSwiper.Provider>
         <InfiniteSwiper.ScrollView
           data={data}
           autoPlay
           renderItem={renderItem}
+          duration={2000}
           height={200}
         />
         <InfiniteSwiper.DotIndicator />
@@ -47,6 +48,7 @@ const Basic = () => {
           autoPlay
           horizontal={false}
           renderItem={renderItem}
+          duration={2000}
           height={200}
         />
         <InfiniteSwiper.DotIndicator />

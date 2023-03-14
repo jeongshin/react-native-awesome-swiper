@@ -1,0 +1,69 @@
+# DotIndicator
+
+### Basic usage
+
+```tsx title="ScaleSwiper.tsx"
+import { InfiniteSwiper } from 'react-native-awesome-swiper';
+
+const Component = () => {
+  const data: string[] = [
+    'https://file.mk.co.kr/meet/neds/2022/06/image_readtop_2022_486646_16541333805062545.jpg',
+    'http://file.mk.co.kr/meet/neds/2022/02/image_readtop_2022_104459_16440258224937758.jpg',
+    'https://pbs.twimg.com/media/FoR4kypaMAA0Nm9?format=jpg&name=4096x4096',
+  ];
+
+  return (
+    <InfiniteSwiper.Provider>
+      <InfiniteSwiper.ScrollView
+        autoPlay
+        data={data}
+        renderItem={renderItem}
+        height={200}
+      />
+      <InfiniteSwiper.DotIndicator />
+    </InfiniteSwiper.Provider>
+  );
+};
+```
+
+### `activeDotColor`
+
+| Type   | Default | Required |
+| ------ | ------- | -------- |
+| string | #222222 | NO       |
+
+### `inactiveDotColor`
+
+| Type   | Default | Required |
+| ------ | ------- | -------- |
+| string | #cccccc | NO       |
+
+### `gap`
+
+| Type   | Default | Required |
+| ------ | ------- | -------- |
+| number | 4       | NO       |
+
+### `onPress`
+
+| Type       | Default   | Required |
+| ---------- | --------- | -------- |
+| () => void | undefined | NO       |
+
+### `dotSize`
+
+| Type   | Default | Required |
+| ------ | ------- | -------- |
+| number | 14      | NO       |
+
+### `borderRadius`
+
+| Type   | Default | Required |
+| ------ | ------- | -------- |
+| number | 14      | NO       |
+
+### `style`
+
+| Type      | Default   | Required |
+| --------- | --------- | -------- |
+| ViewStyle | undefined | NO       |

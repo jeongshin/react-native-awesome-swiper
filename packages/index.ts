@@ -11,3 +11,5 @@ export {
   default as InfiniteSwiper,
   InfiniteSwiperProps,
 } from './components/InfiniteSwiper';
+
+export { default as useInfiniteSwiperContext } from './components/InfiniteSwiper/hooks/useInfiniteSwiperContext';

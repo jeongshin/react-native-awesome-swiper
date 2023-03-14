@@ -38,11 +38,8 @@ export type InfiniteSwiperRenderItem<Item> = (info: {
 
 /**
  * TODO:
- *
- * - add docs
+ * - refactor to FlatList API for optimization
  * - web support
- * - support vertical
- * - add indicator
  */
 function InfiniteSwiper<T>({
   data: _data,

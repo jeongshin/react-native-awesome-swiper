@@ -1,0 +1,32 @@
+Basic usage
+
+```tsx title="ScaleSwiper.tsx"
+import { ScaleSwiper } from 'react-native-awesome-swiper';
+
+const Component = () => {
+  const data: string[] = [
+    'https://file.mk.co.kr/meet/neds/2022/06/image_readtop_2022_486646_16541333805062545.jpg',
+    'http://file.mk.co.kr/meet/neds/2022/02/image_readtop_2022_104459_16440258224937758.jpg',
+    'https://pbs.twimg.com/media/FoR4kypaMAA0Nm9?format=jpg&name=4096x4096',
+  ];
+
+  const { ref, refCallback } = useSwiperRefCallback<string>();
+
+  return (
+    <ScaleSwiper.Provider>
+      <ScaleSwiper.FlatList
+        data={data}
+        refCallback={refCallback}
+        renderItem={({ item }) => (
+          <Image style={styles.image} source={{ uri: item }} />
+        )}
+      />
+      <ScaleSwiper.DotIndicator
+        onPress={(index: number) => {
+          ref.current?.scrollToIndex({ index, animated: true });
+        }}
+      />
+    </ScaleSwiper.Provider>
+  );
+};
+```
