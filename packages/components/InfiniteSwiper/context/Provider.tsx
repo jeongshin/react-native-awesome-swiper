@@ -5,7 +5,7 @@ import {
   ContextType,
   UpdateContextType,
   UpdateSwiperContext,
-} from '.';
+} from './context';
 
 export interface ProviderProps {
   children?: React.ReactNode;

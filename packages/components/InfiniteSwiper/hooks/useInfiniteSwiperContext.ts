@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { SwiperContext } from '../context';
+import { SwiperContext } from '../context/context';
 
 const useInfiniteSwiperContext = () => {
   const context = useContext(SwiperContext);

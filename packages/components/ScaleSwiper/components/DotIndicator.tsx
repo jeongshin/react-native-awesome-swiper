@@ -33,7 +33,7 @@ const DotIndicator: React.FC<DotIndicatorProps> = ({
   const items = useMemo(() => new Array(itemCount).fill(null), [itemCount]);
 
   return (
-    <View style={StyleSheet.flatten([defaultStyles.container, style])}>
+    <View style={style}>
       {items.map((_, index) => (
         <Pressable onPress={() => onPress && onPress(index)} key={index}>
           <Animated.View
@@ -86,14 +86,14 @@ const DotIndicator: React.FC<DotIndicatorProps> = ({
   );
 };
 
-const defaultStyles = StyleSheet.create({
-  container: {
+DotIndicator.defaultProps = {
+  style: {
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
     padding: 20,
   },
-});
+};
 
 export default DotIndicator;

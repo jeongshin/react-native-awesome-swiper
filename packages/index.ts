@@ -10,6 +10,7 @@ export { default as useSwiperContext } from './components/ScaleSwiper/hooks/useS
 export {
   default as InfiniteSwiper,
   InfiniteSwiperProps,
+  InfiniteSwiperRenderItem,
 } from './components/InfiniteSwiper';
 
 export { default as useInfiniteSwiperContext } from './components/InfiniteSwiper/hooks/useInfiniteSwiperContext';
