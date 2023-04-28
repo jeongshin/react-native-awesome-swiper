@@ -1,0 +1,116 @@
+import gif from '../../../static/gif/dynamic_swiper_basic.gif';
+
+# DynamicItemScrollSwiper
+
+auto scrolling using scroll view
+
+## Overview
+
+<div className="sample-gif">
+  <img src={gif} className="sample-gif-img" alt="dynamic-swiper-example" />
+</div>
+
+## Platform
+
+| iOS | Android | Web |
+| :-: | :-----: | :-: |
+|  O  |    O    |  O  |
+
+### Basic usage
+
+```tsx
+import React, { useCallback, useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { DynamicItemScrollSwiper } from 'react-native-awesome-swiper';
+
+const App = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const items = ['Hi', 'Jerry', 'FrontEnd', 'Developer', 'Apple', 'Coding'];
+
+  return (
+    <DynamicItemScrollSwiper
+      data={items}
+      horizontal
+      contentContainerStyle={{ paddingHorizontal: 20 }}
+      activeIndex={activeIndex}
+      gap={10}
+      viewOffset={40}
+      renderItem={(item, index) => (
+        <Pressable
+          onPress={() => setActiveIndex(index)}
+          style={[
+            styles.item,
+            activeIndex === index
+              ? { backgroundColor: '#A4D0A4' }
+              : { backgroundColor: '#eeeeee' },
+          ]}>
+          <Text>{item}</Text>
+        </Pressable>
+      )}
+    />
+  );
+};
+
+const styles = StyleSheet.create({
+  item: {
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+```
+
+## Props
+
+extends all [ScrollViewProps](https://reactnative.dev/docs/scrollview)
+
+### `activeIndex`
+
+currently active index
+
+| Type   | Default   | Required |
+| ------ | --------- | -------- |
+| number | undefined | YES      |
+
+### `data`
+
+items to render
+
+| Type | Default   | Required |
+| ---- | --------- | -------- |
+| T[]  | undefined | YES      |
+
+### `renderItem`
+
+render item function
+
+| Type                                           | Default   | Required |
+| ---------------------------------------------- | --------- | -------- |
+| (item: T, index: number) => React.ReactElement | undefined | YES      |
+
+### `keyExtractor`
+
+uses index default
+
+| Type                               | Default   | Required |
+| ---------------------------------- | --------- | -------- |
+| (item: T, index: number) => string | undefined | NO       |
+
+### `gap`
+
+gap between items
+
+| Type   | Default | Required |
+| ------ | ------- | -------- |
+| number | 0       | NO       |
+
+### `viewOffset`
+
+view offset when scrolling to `activeIndex` item
+
+| Type   | Default | Required |
+| ------ | ------- | -------- |
+| number | 20      | NO       |

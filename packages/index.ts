@@ -14,3 +14,8 @@ export {
 } from './components/InfiniteSwiper';
 
 export { default as useInfiniteSwiperContext } from './components/InfiniteSwiper/hooks/useInfiniteSwiperContext';
+
+export {
+  default as DynamicItemScrollSwiper,
+  DynamicItemScrollSwiperProps,
+} from './components/DynamicItemScrollSwiper';
