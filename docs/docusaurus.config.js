@@ -18,7 +18,7 @@ const config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  // organizationName: 'jeongshin', // Usually your GitHub org/user name.
+  organizationName: 'jeongshin', // Usually your GitHub org/user name.
   // projectName: 'react-native-awesome-swiper', // Usually your repo name.
   // trailingSlash: false,
   // deploymentBranch: 'gh-pages',
