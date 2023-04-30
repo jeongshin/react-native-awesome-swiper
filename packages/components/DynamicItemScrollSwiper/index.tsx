@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { ScrollView, ScrollViewProps, View, ViewStyle } from 'react-native';
 
 export interface DynamicItemScrollSwiperProps<T> extends ScrollViewProps {
@@ -8,6 +8,7 @@ export interface DynamicItemScrollSwiperProps<T> extends ScrollViewProps {
   keyExtractor?: (item: T, index: number) => string;
   gap?: number;
   viewOffset?: number;
+  shouldScrollOnMount?: boolean;
 }
 
 function DynamicItemScrollSwiper<T>({
@@ -20,11 +21,16 @@ function DynamicItemScrollSwiper<T>({
   showsHorizontalScrollIndicator = false,
   showsVerticalScrollIndicator = false,
   viewOffset = 20,
+  shouldScrollOnMount = false,
   ...props
 }: DynamicItemScrollSwiperProps<T>) {
   const ref = useRef<ScrollView>(null);
 
-  const [doneLayout, setDoneLayout] = useState(false);
+  const initialScrollDone = useRef(false);
+
+  const [mounted, setMounted] = useState(false);
+
+  const [doneReLayout, setDoneReLayout] = useState(false);
 
   const layout = useRef(new Map<number, number>()).current;
 
@@ -47,16 +53,32 @@ function DynamicItemScrollSwiper<T>({
     return isLastItem ? {} : { marginBottom: gap };
   };
 
-  useEffect(() => {
-    if (!doneLayout) return;
+  const getInitialStyle = (): ViewStyle => {
+    if (activeIndex !== 0 && !shouldScrollOnMount && !mounted) {
+      return { opacity: 0 };
+    }
+    return {};
+  };
+
+  useLayoutEffect(() => {
+    if (!doneReLayout) return;
 
     const offset =
       getOffsetOfIndex({ layout, index: activeIndex, gap }) - viewOffset;
 
-    ref.current?.scrollTo(
-      horizontal ? { y: 0, x: offset } : { x: 0, y: offset },
-    );
-  }, [activeIndex, doneLayout, viewOffset, horizontal]);
+    if (initialScrollDone.current) {
+      ref.current?.scrollTo(
+        horizontal ? { y: 0, x: offset } : { x: 0, y: offset },
+      );
+    } else {
+      initialScrollDone.current = true;
+      ref.current?.scrollTo(
+        horizontal
+          ? { y: 0, x: offset, animated: shouldScrollOnMount }
+          : { x: 0, y: offset, animated: shouldScrollOnMount },
+      );
+    }
+  }, [activeIndex, doneReLayout, viewOffset, horizontal]);
 
   return (
     <ScrollView
@@ -68,7 +90,7 @@ function DynamicItemScrollSwiper<T>({
       {data.map((item, index) => (
         <View
           key={keyExtractor(item, index)}
-          style={getGapStyle(index)}
+          style={[getGapStyle(index), getInitialStyle()]}
           onLayout={(e) => {
             const dimension = horizontal
               ? e.nativeEvent.layout.width
@@ -76,7 +98,11 @@ function DynamicItemScrollSwiper<T>({
 
             layout.set(index, dimension);
 
-            setDoneLayout(data.every((_, idx) => layout.has(idx)));
+            const everyLayoutDone = data.every((_, idx) => layout.has(idx));
+
+            setDoneReLayout(everyLayoutDone);
+
+            setMounted((prev) => prev || everyLayoutDone);
           }}>
           {renderItem(item, index)}
         </View>

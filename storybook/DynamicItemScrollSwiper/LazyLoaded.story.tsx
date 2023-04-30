@@ -1,16 +1,22 @@
-import React, { useCallback, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { DynamicItemScrollSwiper } from '../../packages';
 import Typo from '../Typo';
 
-const Basic = () => {
-  const [activeIndex, setActiveIndex] = useState(3);
+const LazyLoaded = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  const items = ['Hi', 'Jerry', 'FrontEnd', 'Developer', 'Apple', 'Coding'];
+  const [items, setItems] = useState<string[]>([]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setItems(['Hi', 'Jerry', 'FrontEnd', 'Developer', 'Apple', 'Coding']);
+    }, 2000);
+  }, []);
 
   return (
     <View>
-      <Typo.H1 text={'Horizontal'} />
+      <Typo.H1 text={'LazyLoaded'} />
       <DynamicItemScrollSwiper
         data={items}
         horizontal
@@ -45,4 +51,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Basic;
+export default LazyLoaded;

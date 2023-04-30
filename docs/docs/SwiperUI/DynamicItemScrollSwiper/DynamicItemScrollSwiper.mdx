@@ -114,3 +114,14 @@ view offset when scrolling to `activeIndex` item
 | Type   | Default | Required |
 | ------ | ------- | -------- |
 | number | 20      | NO       |
+
+### `shouldScrollOnMount`
+
+flag to decide scroll on mount
+
+> If initail `activeIndex` is not 0 and `shouldScrollOnMount` is false, contents may not be visible for few milliseconds
+> while layout calculation is on-going to decide initial scroll offset
+
+| Type    | Default | Required |
+| ------- | ------- | -------- |
+| boolean | false   | NO       |
