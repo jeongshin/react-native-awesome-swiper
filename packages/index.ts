@@ -19,3 +19,8 @@ export {
   default as DynamicItemScrollSwiper,
   DynamicItemScrollSwiperProps,
 } from './components/DynamicItemScrollSwiper';
+
+export {
+  default as PageSwiper,
+  PageSwiperProps,
+} from './components/PageSwiper';
