@@ -1,14 +1,14 @@
 import React from 'react';
-import { Animated } from 'react-native';
+import { Animated, ImageProps } from 'react-native';
+import useAnimatedPageSwiperHeader, {
+  AnimatedHeaderProps,
+} from '../hooks/useAnimatedPageSwiperHeader';
 
-export interface Props {
-  //
-}
+export type Props = AnimatedHeaderProps<ImageProps>;
 
-const AnimatedHeaderImage: React.FC<Props> = () => {
-  //
-
-  return <Animated.Image />;
+const AnimatedHeaderImage: React.FC<Props> = (props) => {
+  const animatedProps = useAnimatedPageSwiperHeader(props);
+  return <Animated.Image {...props} {...animatedProps} />;
 };
 
-export default AnimatedHeaderImage;
+export default React.memo(AnimatedHeaderImage);

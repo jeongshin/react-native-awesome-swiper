@@ -25,6 +25,13 @@ export interface Page {
   Component: React.FunctionComponent<PageProps>;
 }
 
+interface EdgeInsets {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+}
+
 export interface PageSwiperProps<T>
   extends Omit<
     Partial<FlatListProps<T>>,
@@ -41,8 +48,9 @@ export interface PageSwiperProps<T>
   itemVisiblePercentThreshold?: number;
   renderHeader?: () => React.ReactElement;
   containerScrollViewProps?: ScrollViewProps;
-  onScrollX: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
-  onScrollY: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+  onScrollX?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+  onScrollY?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+  // safeAreaInsets?: EdgeInsets;
 }
 
 function PageSwiper<T extends Page>(
@@ -57,6 +65,7 @@ function PageSwiper<T extends Page>(
     onScrollX,
     onScrollY,
     scrollEventThrottle,
+    refreshControl,
     ...props
   }: PageSwiperProps<T>,
   ref?: React.ForwardedRef<FlatList<T>>,
@@ -142,7 +151,9 @@ function PageSwiper<T extends Page>(
   return (
     <PageSwiperContext.Provider value={context}>
       <Animated.ScrollView
+        // showsVerticalScrollIndicator={false}
         {...containerScrollViewProps}
+        refreshControl={refreshControl}
         onScroll={scrollYHandler}
         contentContainerStyle={StyleSheet.flatten([
           containerScrollViewProps?.contentContainerStyle,
@@ -154,6 +165,7 @@ function PageSwiper<T extends Page>(
           disableIntervalMomentum
           decelerationRate={'fast'}
           bounces={false}
+          showsHorizontalScrollIndicator={false}
           {...props}
           // should not override props
           horizontal

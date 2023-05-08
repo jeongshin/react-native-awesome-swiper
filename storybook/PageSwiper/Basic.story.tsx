@@ -1,11 +1,13 @@
 import React, { useRef, useState } from 'react';
 import {
   FlatList,
+  RefreshControl,
   StyleSheet,
   Text,
   View,
   useWindowDimensions,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Page, PageSwiper, PageProps } from '../../packages';
 
 const Basic = () => {
@@ -14,6 +16,10 @@ const Basic = () => {
   const { width, height } = useWindowDimensions();
 
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const { top } = useSafeAreaInsets();
+
+  const [refreshing, setRefreshing] = useState(false);
 
   const pages: Page[] = [
     { label: 'pink', Component: SamplePage },
@@ -25,12 +31,28 @@ const Basic = () => {
     { label: 'skyblue', Component: SamplePage },
   ];
 
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    setRefreshing(false);
+  };
+
   return (
     <PageSwiper.FlatList
       ref={ref}
       pages={pages}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+      }
       renderHeader={() => (
-        <View style={{ width, height: width, backgroundColor: 'blue' }}></View>
+        <View>
+          <PageSwiper.AnimatedHeaderImage
+            source={{
+              uri: 'https://upload.wikimedia.org/wikipedia/commons/6/60/IU_for_Chamisul_2021_campaign_09.png',
+            }}
+            style={{ width, height: width }}
+          />
+        </View>
       )}
       onActivePageIndexChange={setActiveIndex}
     />
@@ -49,22 +71,14 @@ function SamplePage({ label }: PageProps) {
         alignItems: 'center',
       }}>
       {label.split('').map((char, index) => (
-        <Text key={index} style={{ fontSize: 40, fontWeight: 'bold' }}>
+        <Text
+          key={index}
+          style={{ fontSize: 100, fontWeight: 'bold', color: 'white' }}>
           {char}
         </Text>
       ))}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  item: {
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 export default Basic;
