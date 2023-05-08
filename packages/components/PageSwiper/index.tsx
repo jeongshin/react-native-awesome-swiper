@@ -1,13 +1,29 @@
 import React, { useCallback } from 'react';
-import { FlatListProps } from 'react-native';
+import {
+  Animated,
+  FlatListProps,
+  ScrollView,
+  ScrollViewProps,
+} from 'react-native';
 import {
   FlatList,
   ListRenderItem,
   View,
   useWindowDimensions,
+  StyleSheet,
 } from 'react-native';
 
-export interface PageSwiperProps<T extends React.FunctionComponent>
+export interface PageProps {
+  label: string;
+  index: number;
+}
+
+export interface Page {
+  label: string;
+  Component: React.FunctionComponent<PageProps>;
+}
+
+export interface PageSwiperProps<T>
   extends Omit<
     Partial<FlatListProps<T>>,
     | 'data'
@@ -16,28 +32,37 @@ export interface PageSwiperProps<T extends React.FunctionComponent>
     | 'getItemLayout'
     | 'snapToInterval'
   > {
-  data: T[];
+  pages: T[];
   onActivePageIndexChange?: (index: number) => void;
   minimumViewTime?: number;
   itemVisiblePercentThreshold?: number;
+  renderHeader?: () => React.ReactElement;
+  containerScrollViewProps?: ScrollViewProps;
 }
 
-function PageSwiper<T extends React.FunctionComponent>(
+function PageSwiper<T extends Page>(
   {
-    data,
+    pages,
     onActivePageIndexChange,
     minimumViewTime,
     itemVisiblePercentThreshold,
     initialScrollIndex = 0,
+    containerScrollViewProps,
+    renderHeader,
     ...props
   }: PageSwiperProps<T>,
   ref?: React.ForwardedRef<FlatList<T>>,
 ) {
   const { width } = useWindowDimensions();
 
-  const renderItem: ListRenderItem<T> = useCallback(({ item }) => {
-    return <View style={{ flex: 1, width }}>{item({})}</View>;
-  }, []);
+  const renderItem: ListRenderItem<T> = useCallback(
+    ({ item: { Component, label }, index }) => {
+      return (
+        <View style={{ flex: 1, width }}>{Component({ label, index })}</View>
+      );
+    },
+    [],
+  );
 
   const getItemLayout = useCallback(
     (_: T[] | null | undefined, index: number) => ({
@@ -61,27 +86,37 @@ function PageSwiper<T extends React.FunctionComponent>(
   );
 
   return (
-    <FlatList
-      horizontal
-      // onViewableItemsChanged={handleViewableItemChanged}
-      disableIntervalMomentum
-      decelerationRate={'fast'}
-      {...props}
-      ref={ref}
-      data={data}
-      style={{ width }}
-      renderItem={renderItem}
-      getItemLayout={getItemLayout}
-      bounces={false}
-      snapToInterval={width}
-      automaticallyAdjustContentInsets={false}
-      initialScrollIndex={initialScrollIndex}
-      viewabilityConfig={{
-        itemVisiblePercentThreshold: itemVisiblePercentThreshold ?? 70,
-        waitForInteraction: true,
-        minimumViewTime: minimumViewTime ?? 200,
-      }}
-    />
+    <ScrollView
+      {...containerScrollViewProps}
+      contentContainerStyle={StyleSheet.flatten([
+        containerScrollViewProps?.contentContainerStyle,
+        { flexGrow: 1 },
+      ])}>
+      {renderHeader && renderHeader()}
+      <Animated.FlatList<T>
+        // can override props
+        disableIntervalMomentum
+        decelerationRate={'fast'}
+        bounces={false}
+        {...props}
+        // should not override props
+        horizontal
+        ref={ref as React.ForwardedRef<Animated.FlatList<T>>}
+        data={pages as Animated.WithAnimatedValue<T>[]}
+        style={{ width }}
+        renderItem={renderItem}
+        getItemLayout={getItemLayout}
+        snapToInterval={width}
+        automaticallyAdjustContentInsets={false}
+        initialScrollIndex={initialScrollIndex}
+        viewabilityConfig={{
+          itemVisiblePercentThreshold: itemVisiblePercentThreshold ?? 70,
+          waitForInteraction: true,
+          minimumViewTime: minimumViewTime ?? 200,
+        }}
+        // onViewableItemsChanged={handleViewableItemChanged}
+      />
+    </ScrollView>
   );
 }
 

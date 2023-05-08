@@ -22,5 +22,7 @@ export {
 
 export {
   default as PageSwiper,
+  Page,
+  PageProps,
   PageSwiperProps,
 } from './components/PageSwiper';
