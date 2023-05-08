@@ -1,7 +1,10 @@
 import { createContext, useContext } from 'react';
 import { Animated } from 'react-native';
 
-export const PageSwiperContext = createContext<null | Animated.Value>(null);
+export const PageSwiperContext = createContext<null | {
+  scrollX: Animated.Value;
+  scrollY: Animated.Value;
+}>(null);
 
 export function usePageSwiperContext() {
   const context = useContext(PageSwiperContext);

@@ -1,8 +1,9 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import {
   Animated,
   FlatListProps,
-  ScrollView,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
   ScrollViewProps,
 } from 'react-native';
 import {
@@ -12,7 +13,7 @@ import {
   useWindowDimensions,
   StyleSheet,
 } from 'react-native';
-import Provider from '../context/Provider';
+import { PageSwiperContext } from '../context';
 
 export interface PageProps {
   label: string;
@@ -32,6 +33,7 @@ export interface PageSwiperProps<T>
     | 'viewabilityConfig'
     | 'getItemLayout'
     | 'snapToInterval'
+    | 'onScroll'
   > {
   pages: T[];
   onActivePageIndexChange?: (index: number) => void;
@@ -39,6 +41,8 @@ export interface PageSwiperProps<T>
   itemVisiblePercentThreshold?: number;
   renderHeader?: () => React.ReactElement;
   containerScrollViewProps?: ScrollViewProps;
+  onScrollX: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+  onScrollY: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
 }
 
 function PageSwiper<T extends Page>(
@@ -50,11 +54,60 @@ function PageSwiper<T extends Page>(
     initialScrollIndex,
     containerScrollViewProps,
     renderHeader,
+    onScrollX,
+    onScrollY,
+    scrollEventThrottle,
     ...props
   }: PageSwiperProps<T>,
   ref?: React.ForwardedRef<FlatList<T>>,
 ) {
   const { width } = useWindowDimensions();
+
+  const scrollX = useRef(
+    new Animated.Value((initialScrollIndex || 0) * width),
+  ).current;
+
+  const scrollY = useRef(new Animated.Value(0)).current;
+
+  const context = useMemo(() => ({ scrollX, scrollY }), []);
+
+  const scrollXHandler = useMemo(
+    () =>
+      Animated.event(
+        [
+          {
+            nativeEvent: {
+              contentOffset: { x: scrollX },
+            },
+          },
+        ],
+        {
+          useNativeDriver: true,
+          listener: (event: NativeSyntheticEvent<NativeScrollEvent>) =>
+            onScrollX && onScrollX(event),
+        },
+      ),
+    [onScrollX],
+  );
+
+  const scrollYHandler = useMemo(
+    () =>
+      Animated.event(
+        [
+          {
+            nativeEvent: {
+              contentOffset: { y: scrollY },
+            },
+          },
+        ],
+        {
+          useNativeDriver: true,
+          listener: (event: NativeSyntheticEvent<NativeScrollEvent>) =>
+            onScrollY && onScrollY(event),
+        },
+      ),
+    [onScrollY],
+  );
 
   const renderItem: ListRenderItem<T> = useCallback(
     ({ item: { Component, label }, index }) => {
@@ -87,9 +140,10 @@ function PageSwiper<T extends Page>(
   );
 
   return (
-    <Provider initialScrollIndex={initialScrollIndex || 0} width={width}>
-      <ScrollView
+    <PageSwiperContext.Provider value={context}>
+      <Animated.ScrollView
         {...containerScrollViewProps}
+        onScroll={scrollYHandler}
         contentContainerStyle={StyleSheet.flatten([
           containerScrollViewProps?.contentContainerStyle,
           { flexGrow: 1 },
@@ -103,6 +157,8 @@ function PageSwiper<T extends Page>(
           {...props}
           // should not override props
           horizontal
+          onScroll={scrollXHandler}
+          scrollEventThrottle={scrollEventThrottle ?? 12}
           ref={ref as React.ForwardedRef<Animated.FlatList<T>>}
           data={pages as Animated.WithAnimatedValue<T>[]}
           style={{ width }}
@@ -118,8 +174,8 @@ function PageSwiper<T extends Page>(
           }}
           onViewableItemsChanged={handleViewableItemChanged}
         />
-      </ScrollView>
-    </Provider>
+      </Animated.ScrollView>
+    </PageSwiperContext.Provider>
   );
 }
 
