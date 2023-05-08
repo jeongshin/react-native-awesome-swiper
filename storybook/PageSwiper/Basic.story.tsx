@@ -1,7 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
-  FlatList,
-  RefreshControl,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -11,8 +10,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Page, PageSwiper, PageProps } from '../../packages';
 
 const Basic = () => {
-  const ref = useRef<FlatList>(null);
-
   const { width, height } = useWindowDimensions();
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -20,6 +17,9 @@ const Basic = () => {
   const { top } = useSafeAreaInsets();
 
   const [refreshing, setRefreshing] = useState(false);
+
+  const uri =
+    'https://m.media-amazon.com/images/M/MV5BOTJhNzlmNzctNTU5Yy00N2YwLThhMjQtZDM0YjEzN2Y0ZjNhXkEyXkFqcGdeQXVyMTEwMTQ4MzU5._V1_FMjpg_UX1000_.jpg';
 
   const pages: Page[] = [
     { label: 'pink', Component: SamplePage },
@@ -38,42 +38,64 @@ const Basic = () => {
   };
 
   return (
-    <PageSwiper.FlatList
-      ref={ref}
-      pages={pages}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-      }
-      renderHeader={() => (
-        <View>
-          <PageSwiper.AnimatedHeaderImage
-            source={{
-              uri: 'https://upload.wikimedia.org/wikipedia/commons/6/60/IU_for_Chamisul_2021_campaign_09.png',
-            }}
-            style={{ width, height: width }}
-          />
-        </View>
-      )}
-      onActivePageIndexChange={setActiveIndex}
-    />
+    <PageSwiper.Provider>
+      <PageSwiper.PageScrollView stickyHeaderIndices={[1]}>
+        <PageSwiper.AnimatedHeaderImage
+          source={{ uri }}
+          height={width}
+          style={{ width }}>
+          <View
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(0,0,0,0.5)',
+              },
+            ]}>
+            <Text
+              style={{
+                fontSize: 40,
+                color: 'white',
+                textAlign: 'center',
+              }}>{`Super Mario\nBros`}</Text>
+          </View>
+        </PageSwiper.AnimatedHeaderImage>
+        <PageSwiper.AnimatedLineTabs
+          pages={pages}
+          activeIndex={activeIndex}
+          topInset={top}
+          contentContainerStyle={{ paddingHorizontal: 20 }}
+        />
+        <PageSwiper.PageFlatList
+          pages={pages}
+          onActivePageIndexChange={setActiveIndex}
+        />
+      </PageSwiper.PageScrollView>
+    </PageSwiper.Provider>
   );
 };
 
 function SamplePage({ label }: PageProps) {
   return (
     <View
-      style={{
-        width: '100%',
-        height: label.length * 300,
-        backgroundColor: label,
-        flex: 1,
-        justifyContent: 'space-evenly',
-        alignItems: 'center',
-      }}>
+      style={[
+        {
+          // backgroundColor: label,
+          width: '100%',
+        },
+      ]}>
       {label.split('').map((char, index) => (
         <Text
           key={index}
-          style={{ fontSize: 100, fontWeight: 'bold', color: 'white' }}>
+          style={{
+            textAlign: 'center',
+            borderWidth: 1,
+            fontSize: 100,
+            fontWeight: 'bold',
+            color: 'white',
+            borderColor: '#444',
+          }}>
           {char}
         </Text>
       ))}
