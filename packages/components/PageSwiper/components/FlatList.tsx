@@ -12,6 +12,7 @@ import {
   useWindowDimensions,
   StyleSheet,
 } from 'react-native';
+import Provider from '../context/Provider';
 
 export interface PageProps {
   label: string;
@@ -46,7 +47,7 @@ function PageSwiper<T extends Page>(
     onActivePageIndexChange,
     minimumViewTime,
     itemVisiblePercentThreshold,
-    initialScrollIndex = 0,
+    initialScrollIndex,
     containerScrollViewProps,
     renderHeader,
     ...props
@@ -86,37 +87,39 @@ function PageSwiper<T extends Page>(
   );
 
   return (
-    <ScrollView
-      {...containerScrollViewProps}
-      contentContainerStyle={StyleSheet.flatten([
-        containerScrollViewProps?.contentContainerStyle,
-        { flexGrow: 1 },
-      ])}>
-      {renderHeader && renderHeader()}
-      <Animated.FlatList<T>
-        // can override props
-        disableIntervalMomentum
-        decelerationRate={'fast'}
-        bounces={false}
-        {...props}
-        // should not override props
-        horizontal
-        ref={ref as React.ForwardedRef<Animated.FlatList<T>>}
-        data={pages as Animated.WithAnimatedValue<T>[]}
-        style={{ width }}
-        renderItem={renderItem}
-        getItemLayout={getItemLayout}
-        snapToInterval={width}
-        automaticallyAdjustContentInsets={false}
-        initialScrollIndex={initialScrollIndex}
-        viewabilityConfig={{
-          itemVisiblePercentThreshold: itemVisiblePercentThreshold ?? 70,
-          waitForInteraction: true,
-          minimumViewTime: minimumViewTime ?? 200,
-        }}
-        // onViewableItemsChanged={handleViewableItemChanged}
-      />
-    </ScrollView>
+    <Provider initialScrollIndex={initialScrollIndex || 0} width={width}>
+      <ScrollView
+        {...containerScrollViewProps}
+        contentContainerStyle={StyleSheet.flatten([
+          containerScrollViewProps?.contentContainerStyle,
+          { flexGrow: 1 },
+        ])}>
+        {renderHeader && renderHeader()}
+        <Animated.FlatList<T>
+          // can override props
+          disableIntervalMomentum
+          decelerationRate={'fast'}
+          bounces={false}
+          {...props}
+          // should not override props
+          horizontal
+          ref={ref as React.ForwardedRef<Animated.FlatList<T>>}
+          data={pages as Animated.WithAnimatedValue<T>[]}
+          style={{ width }}
+          renderItem={renderItem}
+          getItemLayout={getItemLayout}
+          snapToInterval={width}
+          automaticallyAdjustContentInsets={false}
+          initialScrollIndex={initialScrollIndex}
+          viewabilityConfig={{
+            itemVisiblePercentThreshold: itemVisiblePercentThreshold ?? 70,
+            waitForInteraction: true,
+            minimumViewTime: minimumViewTime ?? 200,
+          }}
+          onViewableItemsChanged={handleViewableItemChanged}
+        />
+      </ScrollView>
+    </Provider>
   );
 }
 

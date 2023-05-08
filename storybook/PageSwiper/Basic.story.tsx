@@ -26,7 +26,7 @@ const Basic = () => {
   ];
 
   return (
-    <PageSwiper
+    <PageSwiper.FlatList
       ref={ref}
       pages={pages}
       renderHeader={() => (
