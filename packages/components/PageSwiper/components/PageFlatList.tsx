@@ -130,7 +130,7 @@ function PageSwiper<T extends Page>({
         waitForInteraction: true,
         minimumViewTime: minimumViewTime ?? 200,
       }}
-      // onViewableItemsChanged={handleViewableItemChanged}
+      onViewableItemsChanged={handleViewableItemChanged}
     />
   );
 }

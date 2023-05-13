@@ -40,7 +40,7 @@ const Basic = () => {
   return (
     <PageSwiper.Provider>
       <PageSwiper.PageScrollView stickyHeaderIndices={[1]}>
-        <PageSwiper.AnimatedHeaderImage
+        {/* <PageSwiper.AnimatedHeaderImage
           source={{ uri }}
           height={width}
           style={{ width }}>
@@ -60,7 +60,7 @@ const Basic = () => {
                 textAlign: 'center',
               }}>{`Super Mario\nBros`}</Text>
           </View>
-        </PageSwiper.AnimatedHeaderImage>
+        </PageSwiper.AnimatedHeaderImage> */}
         <PageSwiper.AnimatedLineTabs
           pages={pages}
           activeIndex={activeIndex}
