@@ -21,7 +21,13 @@ export function usePageSwiperContext() {
   return context;
 }
 
-export function Provider({ children }: { children?: React.ReactNode }) {
+export function Provider({
+  children,
+  useNativeDriver = true,
+}: {
+  children?: React.ReactNode;
+  useNativeDriver?: boolean;
+}) {
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -38,7 +44,7 @@ export function Provider({ children }: { children?: React.ReactNode }) {
             },
           },
         ],
-        { useNativeDriver: true },
+        { useNativeDriver },
       ),
     [],
   );

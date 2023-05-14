@@ -1,8 +1,12 @@
+import type { ForwardedRef } from 'react';
+import { forwardRef } from 'react';
 import React, { useCallback, useMemo } from 'react';
 import type {
+  FlatList,
   FlatListProps,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  ViewabilityConfig,
 } from 'react-native';
 import type { ListRenderItem } from 'react-native';
 import { Animated } from 'react-native';
@@ -21,31 +25,33 @@ export interface Page {
 
 export interface PageSwiperProps<T>
   extends Omit<
-    Partial<FlatListProps<T>>,
-    | 'data'
-    | 'renderItem'
-    | 'viewabilityConfig'
-    | 'getItemLayout'
-    | 'snapToInterval'
-    | 'onScroll'
-  > {
+      Partial<FlatListProps<T>>,
+      | 'data'
+      | 'renderItem'
+      | 'viewabilityConfig'
+      | 'getItemLayout'
+      | 'snapToInterval'
+    >,
+    ViewabilityConfig {
   pages: T[];
   onActivePageIndexChange?: (index: number) => void;
-  minimumViewTime?: number;
-  itemVisiblePercentThreshold?: number;
-  onScrollX?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
 }
 
-function PageSwiper<T extends Page>({
-  pages,
-  onActivePageIndexChange,
-  minimumViewTime,
-  itemVisiblePercentThreshold,
-  initialScrollIndex,
-  onScrollX,
-  scrollEventThrottle,
-  ...props
-}: PageSwiperProps<T>) {
+function PageSwiper<T extends Page>(
+  {
+    pages,
+    onActivePageIndexChange,
+    minimumViewTime,
+    itemVisiblePercentThreshold,
+    initialScrollIndex,
+    onScroll,
+    scrollEventThrottle,
+    keyExtractor,
+    waitForInteraction = true,
+    ...props
+  }: PageSwiperProps<T>,
+  ref?: ForwardedRef<FlatList<T>>,
+) {
   const { width } = useWindowDimensions();
 
   const { scrollX, flatListRef } = usePageSwiperContext();
@@ -63,10 +69,10 @@ function PageSwiper<T extends Page>({
         {
           useNativeDriver: true,
           listener: (event: NativeSyntheticEvent<NativeScrollEvent>) =>
-            onScrollX && onScrollX(event),
+            onScroll && onScroll(event),
         },
       ),
-    [onScrollX],
+    [onScroll],
   );
 
   const renderItem: ListRenderItem<T> = useCallback(
@@ -115,8 +121,16 @@ function PageSwiper<T extends Page>({
       // should not override props
       horizontal
       onScroll={scrollXHandler}
+      keyExtractor={
+        keyExtractor ? keyExtractor : (item, index) => `${item.label}-${index}`
+      }
       scrollEventThrottle={scrollEventThrottle ?? 12}
-      ref={flatListRef}
+      ref={(_ref) => {
+        //@ts-ignore
+        if (ref) ref.current = _ref;
+        //@ts-ignore
+        flatListRef.current = _ref;
+      }}
       data={pages as Animated.WithAnimatedValue<T>[]}
       style={{ width }}
       renderItem={renderItem}
@@ -126,7 +140,7 @@ function PageSwiper<T extends Page>({
       initialScrollIndex={initialScrollIndex}
       viewabilityConfig={{
         itemVisiblePercentThreshold: itemVisiblePercentThreshold ?? 70,
-        waitForInteraction: true,
+        waitForInteraction,
         minimumViewTime: minimumViewTime ?? 200,
       }}
       onViewableItemsChanged={handleViewableItemChanged}
@@ -134,4 +148,4 @@ function PageSwiper<T extends Page>({
   );
 }
 
-export default PageSwiper;
+export default forwardRef(PageSwiper);

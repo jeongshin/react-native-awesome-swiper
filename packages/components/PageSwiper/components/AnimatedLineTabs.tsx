@@ -1,10 +1,5 @@
 import React, { useLayoutEffect, useRef } from 'react';
-import type {
-  ScrollViewProps,
-  ViewStyle,
-  ScrollView,
-  StyleProp,
-} from 'react-native';
+import type { ScrollViewProps, ViewStyle, StyleProp } from 'react-native';
 import {
   Text,
   StyleSheet,
@@ -12,6 +7,7 @@ import {
   Animated,
   Pressable,
   View,
+  ScrollView,
 } from 'react-native';
 import useDynamicItemLayout from '../../../hooks/useDynamicItemLayout';
 import { usePageSwiperContext } from '../context';
@@ -63,11 +59,16 @@ function AnimatedLineTabs<T extends Page>({
 
   const { scrollX, flatListRef } = usePageSwiperContext();
 
-  const { layout, handleLayout, doneReLayout, initialScrollDone } =
-    useDynamicItemLayout({
-      data: pages,
-      horizontal: true,
-    });
+  const {
+    layout,
+    handleLayout,
+    doneReLayout,
+    initialScrollDone,
+    getOffsetOfIndex,
+  } = useDynamicItemLayout({
+    data: pages,
+    horizontal: true,
+  });
 
   const offsetLeft =
     Number(contentContainerStyle?.paddingLeft) ||
@@ -100,7 +101,7 @@ function AnimatedLineTabs<T extends Page>({
           }}
         />
       )}
-      <Animated.ScrollView
+      <ScrollView
         bounces={false}
         {...props}
         horizontal
@@ -124,6 +125,7 @@ function AnimatedLineTabs<T extends Page>({
               disabled={scrollPageConfig?.scrollOnPress === false}
               onLayout={(e) => handleLayout(e, index)}
               key={key}
+              testID={`tab-${index}`}
               style={StyleSheet.flatten([styles.container, tabStyle])}>
               {renderTab ? (
                 renderTab(label, index)
@@ -199,28 +201,9 @@ function AnimatedLineTabs<T extends Page>({
             ]}
           />
         )}
-      </Animated.ScrollView>
+      </ScrollView>
     </View>
   );
-}
-
-export function getOffsetOfIndex({
-  layout,
-  index,
-  gap,
-}: {
-  layout: Map<number, number>;
-  index: number;
-  gap: number;
-}): number {
-  // [[0, 108.33332824707031], [1, 61], [2, 46.00001525878906], [3, 76], [4, 86]]
-  const itemLayout = [...layout.entries()].sort().map(([_, val]) => val);
-
-  return itemLayout.reduce((acc, offset, currIndex) => {
-    if (currIndex >= index) return acc;
-    // acc + offset + gap
-    return acc + offset + gap;
-  }, 0);
 }
 
 const styles = StyleSheet.create({

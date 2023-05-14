@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
+import type { FlatList } from 'react-native';
 import { Animated, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { PageSwiper, usePageSwiperContext } from '../../packages';
+import { PageSwiper } from '../../packages';
 
 import type { Page, PageProps } from '../../packages';
 
@@ -9,6 +10,8 @@ const Basic = () => {
   const [activeIndex, setActiveIndex] = useState(3);
 
   const { top } = useSafeAreaInsets();
+
+  const ref = useRef<FlatList<Page>>(null);
 
   const pages: Page[] = [
     { label: 'pink', Component: SamplePage },
@@ -29,6 +32,7 @@ const Basic = () => {
         contentContainerStyle={{ paddingHorizontal: 20 }}
       />
       <PageSwiper.PageFlatList
+        ref={ref}
         pages={pages}
         onActivePageIndexChange={setActiveIndex}
         initialScrollIndex={activeIndex}
@@ -38,11 +42,8 @@ const Basic = () => {
 };
 
 function SamplePage({ label }: PageProps) {
-  const { onScrollY } = usePageSwiperContext();
-
   return (
     <Animated.ScrollView
-      onScroll={onScrollY}
       style={[
         {
           width: '100%',
