@@ -1,15 +1,17 @@
 import AnimatedHeaderImage from './components/AnimatedHeaderImage';
 import AnimatedLineTabs from './components/AnimatedLineTabs';
-import PageFlatList, {
+import PageFlatList from './components/PageFlatList';
+import PageScrollView from './components/PageScrollView';
+import { Provider } from './context';
+import useAnimatedPageSwiperHeader from './hooks/useAnimatedPageSwiperHeader';
+import type {
   Page,
   PageProps,
   PageSwiperProps,
 } from './components/PageFlatList';
-import PageScrollView, {
+import type {
   PageScrollViewProps,
 } from './components/PageScrollView';
-import { Provider } from './context';
-import useAnimatedPageSwiperHeader from './hooks/useAnimatedPageSwiperHeader';
 
 export type { Page, PageProps, PageSwiperProps, PageScrollViewProps };
 

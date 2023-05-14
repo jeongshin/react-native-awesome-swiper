@@ -1,5 +1,5 @@
 import { Platform } from 'react-native';
-import { StoryFn } from '@storybook/addons';
+import type { StoryFn } from '@storybook/addons';
 
 export function storybookWebSettingsDecorator<T extends React.ReactNode>(
   story: StoryFn<T>,

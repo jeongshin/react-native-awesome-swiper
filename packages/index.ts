@@ -26,3 +26,5 @@ export {
   PageProps,
   PageSwiperProps,
 } from './components/PageSwiper';
+
+export { usePageSwiperContext } from './components/PageSwiper/context';

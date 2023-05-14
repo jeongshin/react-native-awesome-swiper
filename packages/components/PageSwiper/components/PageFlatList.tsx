@@ -1,11 +1,12 @@
 import React, { useCallback, useMemo } from 'react';
-import {
-  Animated,
+import type {
   FlatListProps,
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from 'react-native';
-import { ListRenderItem, View, useWindowDimensions } from 'react-native';
+import type { ListRenderItem } from 'react-native';
+import { Animated } from 'react-native';
+import { View, useWindowDimensions } from 'react-native';
 import { usePageSwiperContext } from '../context';
 
 export interface PageProps {
@@ -76,10 +77,8 @@ function PageSwiper<T extends Page>({
             width,
             flex: 1,
             backgroundColor: label,
-            // flexShrink: 1,
-            // flexBasis: 'auto',
           }}>
-          {Component({ label, index })}
+          <Component label={label} index={index} />
         </View>
       );
     },

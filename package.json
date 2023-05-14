@@ -11,7 +11,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "prepare": "husky install",
-    "lint": "eslint '**/*.{ts,tsx}' --ext .ts,.tsx --fix",
+    "lint": "eslint 'packages/**/*.{ts,tsx}' --ext .ts,.tsx --fix",
     "typescript": "tsc --noemit",
     "patch": "yarn build && cd lib && release-it patch",
     "minor": "yarn build && cd lib && release-it minor",

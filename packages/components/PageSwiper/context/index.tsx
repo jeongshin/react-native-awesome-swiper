@@ -1,10 +1,12 @@
 import React, { createContext, useContext, useMemo, useRef } from 'react';
-import { Animated, FlatList } from 'react-native';
+import type { FlatList } from 'react-native';
+import { Animated } from 'react-native';
 
 export const PageSwiperContext = createContext<null | {
   scrollX: Animated.Value;
   scrollY: Animated.Value;
   flatListRef: React.RefObject<FlatList<any>>;
+  onScrollY: (...args: any[]) => void;
 }>(null);
 
 export function usePageSwiperContext() {
@@ -26,7 +28,25 @@ export function Provider({ children }: { children?: React.ReactNode }) {
 
   const flatListRef = useRef<FlatList>(null);
 
-  const context = useMemo(() => ({ scrollX, scrollY, flatListRef }), []);
+  const onScrollY = useMemo(
+    () =>
+      Animated.event(
+        [
+          {
+            nativeEvent: {
+              contentOffset: { y: scrollY },
+            },
+          },
+        ],
+        { useNativeDriver: true },
+      ),
+    [],
+  );
+
+  const context = useMemo(
+    () => ({ scrollX, scrollY, flatListRef, onScrollY }),
+    [],
+  );
 
   return (
     <PageSwiperContext.Provider value={context}>

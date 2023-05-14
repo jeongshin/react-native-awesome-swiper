@@ -1,6 +1,8 @@
 import React from 'react';
-import { Animated, Image, ImageProps, StyleSheet } from 'react-native';
-import useAnimatedPageSwiperHeader, {
+import type { ImageProps} from 'react-native';
+import { Animated, Image, StyleSheet } from 'react-native';
+import useAnimatedPageSwiperHeader from '../hooks/useAnimatedPageSwiperHeader';
+import type {
   AnimatedHeaderProps,
 } from '../hooks/useAnimatedPageSwiperHeader';
 

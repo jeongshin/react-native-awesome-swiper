@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react';
-import {
-  Animated,
+import type {
   NativeScrollEvent,
   NativeSyntheticEvent,
-  ScrollViewProps,
+  ScrollViewProps} from 'react-native';
+import {
+  Animated,
   StyleSheet,
 } from 'react-native';
 import { usePageSwiperContext } from '../context';

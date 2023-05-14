@@ -1,5 +1,7 @@
-import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
-import { ScrollView, ScrollViewProps, View, ViewStyle } from 'react-native';
+import React, { useCallback, useLayoutEffect, useRef } from 'react';
+import type { ScrollViewProps, ViewStyle } from 'react-native';
+import { ScrollView, View } from 'react-native';
+import useDynamicItemLayout from '../../hooks/useDynamicItemLayout';
 
 export interface DynamicItemScrollSwiperProps<T> extends ScrollViewProps {
   data: T[];
@@ -26,13 +28,17 @@ function DynamicItemScrollSwiper<T>({
 }: DynamicItemScrollSwiperProps<T>) {
   const ref = useRef<ScrollView>(null);
 
-  const initialScrollDone = useRef(false);
-
-  const [mounted, setMounted] = useState(false);
-
-  const [doneReLayout, setDoneReLayout] = useState(false);
-
-  const layout = useRef(new Map<number, number>()).current;
+  const {
+    mounted,
+    layout,
+    doneReLayout,
+    getOffsetOfIndex,
+    handleLayout,
+    initialScrollDone,
+  } = useDynamicItemLayout({
+    data,
+    horizontal,
+  });
 
   const defaultKeyExtractor = useCallback(
     (_: T, index: number) => index.toString(),
@@ -78,7 +84,7 @@ function DynamicItemScrollSwiper<T>({
           : { x: 0, y: offset, animated: shouldScrollOnMount },
       );
     }
-  }, [activeIndex, doneReLayout, viewOffset, horizontal]);
+  }, [activeIndex, doneReLayout, viewOffset, horizontal, gap]);
 
   return (
     <ScrollView
@@ -91,43 +97,12 @@ function DynamicItemScrollSwiper<T>({
         <View
           key={keyExtractor(item, index)}
           style={[getGapStyle(index), getInitialStyle()]}
-          onLayout={(e) => {
-            const dimension = horizontal
-              ? e.nativeEvent.layout.width
-              : e.nativeEvent.layout.height;
-
-            layout.set(index, dimension);
-
-            const everyLayoutDone = data.every((_, idx) => layout.has(idx));
-
-            setDoneReLayout(everyLayoutDone);
-
-            setMounted((prev) => prev || everyLayoutDone);
-          }}>
+          onLayout={(e) => handleLayout(e, index)}>
           {renderItem(item, index)}
         </View>
       ))}
     </ScrollView>
   );
-}
-
-export function getOffsetOfIndex({
-  layout,
-  index,
-  gap,
-}: {
-  layout: Map<number, number>;
-  index: number;
-  gap: number;
-}): number {
-  // [[0, 108.33332824707031], [1, 61], [2, 46.00001525878906], [3, 76], [4, 86]]
-  const itemLayout = [...layout.entries()].sort().map(([_, val]) => val);
-
-  return itemLayout.reduce((acc, offset, currIndex) => {
-    if (currIndex >= index) return acc;
-    // acc + offset + gap
-    return acc + offset + gap;
-  }, 0);
 }
 
 export default DynamicItemScrollSwiper;

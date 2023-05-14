@@ -1,45 +1,58 @@
-import React, { useLayoutEffect, useRef, useState } from 'react';
-import {
+import React, { useLayoutEffect, useRef } from 'react';
+import type {
+  ScrollViewProps,
+  ViewStyle,
   ScrollView,
+  StyleProp,
+} from 'react-native';
+import {
   Text,
   StyleSheet,
   useWindowDimensions,
   Animated,
-  ScrollViewProps,
-  ViewStyle,
   Pressable,
   View,
 } from 'react-native';
-import { Page } from './PageFlatList';
+import useDynamicItemLayout from '../../../hooks/useDynamicItemLayout';
 import { usePageSwiperContext } from '../context';
-import useDynamicItemLayout from '../hooks/useDynamicItemLayout';
+import type { Page } from './PageFlatList';
 
 interface AnimatedLineTabsProps<T> extends ScrollViewProps {
   pages: T[];
-  renderTab?: (label: string, index: number) => React.ReactElement;
   activeIndex?: number;
   contentContainerStyle?: ViewStyle;
-  backgroundColor?: string;
   onPress?: (index: number) => void;
   viewOffset?: number;
-  scrollPageConfig?: { animated?: boolean; scrollOnPress?: boolean };
-  lineSize?: number;
+  lineThickness?: number;
   lineColor?: string;
   topInset?: number;
+  gap?: number;
+  textStyle?: StyleProp<ViewStyle>;
+  tabStyle?: StyleProp<ViewStyle>;
+  backgroundColor?: string;
+  activeTextColor?: string;
+  inactiveTextColor?: string;
+  renderTab?: (label: string, index: number) => React.ReactElement;
+  scrollPageConfig?: { animated?: boolean; scrollOnPress?: boolean };
 }
 
 function AnimatedLineTabs<T extends Page>({
   pages,
   renderTab,
   contentContainerStyle,
-  backgroundColor = 'white',
-  lineSize = 4,
-  lineColor = 'black',
+  lineThickness = 4,
   onPress,
   activeIndex,
   viewOffset = 24,
   scrollPageConfig,
   topInset,
+  gap = 0,
+  textStyle,
+  backgroundColor = '#ffffff',
+  lineColor = '#000000',
+  inactiveTextColor = '#888888',
+  activeTextColor = '#000000',
+  tabStyle,
   ...props
 }: AnimatedLineTabsProps<T>) {
   const labels = pages.map((page) => page.label);
@@ -48,13 +61,13 @@ function AnimatedLineTabs<T extends Page>({
 
   const ref = useRef<ScrollView>(null);
 
-  const container = useRef<View>(null);
+  const { scrollX, flatListRef } = usePageSwiperContext();
 
-  const [yFromWindow, setYFromWindow] = useState(0);
-
-  const { scrollX, scrollY, flatListRef } = usePageSwiperContext();
-
-  const { layout, handleLayout, doneReLayout } = useDynamicItemLayout(pages);
+  const { layout, handleLayout, doneReLayout, initialScrollDone } =
+    useDynamicItemLayout({
+      data: pages,
+      horizontal: true,
+    });
 
   const offsetLeft =
     Number(contentContainerStyle?.paddingLeft) ||
@@ -65,39 +78,34 @@ function AnimatedLineTabs<T extends Page>({
   useLayoutEffect(() => {
     if (!doneReLayout || typeof activeIndex !== 'number') return;
 
-    const offset = getOffsetOfIndex({ layout, index: activeIndex, gap: 0 });
+    const offset =
+      getOffsetOfIndex({ layout, index: activeIndex, gap }) - viewOffset;
 
-    ref.current?.scrollTo({ x: offset, y: 0 });
-  }, [activeIndex, doneReLayout, viewOffset]);
+    if (initialScrollDone.current) {
+      ref.current?.scrollTo({ y: 0, x: offset });
+    } else {
+      initialScrollDone.current = true;
+      ref.current?.scrollTo({ y: 0, x: offset, animated: false });
+    }
+  }, [activeIndex, doneReLayout, viewOffset, gap]);
 
   return (
-    <View
-      ref={container}
-      onLayout={() => {
-        container.current?.measureInWindow((left, top) => {
-          if (typeof top !== 'number') return;
-          setYFromWindow(top);
-        });
-      }}>
+    <View>
       {!!topInset && (
         <Animated.View
           style={{
             width: '100%',
             height: topInset,
             backgroundColor,
-            opacity: scrollY.interpolate({
-              inputRange: [0, yFromWindow, yFromWindow + topInset],
-              outputRange: [0, 0, 1],
-            }),
           }}
         />
       )}
-      <ScrollView
+      <Animated.ScrollView
         bounces={false}
         {...props}
         horizontal
         ref={ref}
-        style={{ width, backgroundColor }}
+        style={StyleSheet.flatten([props.style, { width, backgroundColor }])}
         contentContainerStyle={contentContainerStyle}
         showsHorizontalScrollIndicator={false}>
         {labels.map((label, index) => {
@@ -116,8 +124,35 @@ function AnimatedLineTabs<T extends Page>({
               disabled={scrollPageConfig?.scrollOnPress === false}
               onLayout={(e) => handleLayout(e, index)}
               key={key}
-              style={styles.container}>
-              {renderTab ? renderTab(label, index) : <Text>{label}</Text>}
+              style={StyleSheet.flatten([styles.container, tabStyle])}>
+              {renderTab ? (
+                renderTab(label, index)
+              ) : (
+                <View>
+                  <Text style={[textStyle, { color: inactiveTextColor }]}>
+                    {label}
+                  </Text>
+                  <Animated.Text
+                    style={[
+                      textStyle,
+                      {
+                        color: activeTextColor,
+                        position: 'absolute',
+                        opacity: scrollX.interpolate({
+                          inputRange: [
+                            width * (index - 1),
+                            width * index,
+                            width * (index + 1),
+                          ],
+                          outputRange: [0, 1, 0],
+                          extrapolate: 'clamp',
+                        }),
+                      },
+                    ]}>
+                    {label}
+                  </Animated.Text>
+                </View>
+              )}
             </Pressable>
           );
         })}
@@ -129,7 +164,7 @@ function AnimatedLineTabs<T extends Page>({
                 position: 'absolute',
                 left: 0,
                 width: 1,
-                height: lineSize,
+                height: lineThickness,
                 bottom: 0,
                 backgroundColor: lineColor,
               },
@@ -164,7 +199,7 @@ function AnimatedLineTabs<T extends Page>({
             ]}
           />
         )}
-      </ScrollView>
+      </Animated.ScrollView>
     </View>
   );
 }

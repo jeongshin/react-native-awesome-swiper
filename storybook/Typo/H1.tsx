@@ -1,10 +1,11 @@
 import React from 'react';
-import {
+import type {
   StyleProp,
-  Text,
   TextStyle,
+  ViewStyle} from 'react-native';
+import {
+  Text,
   View,
-  ViewStyle,
   StyleSheet,
 } from 'react-native';
 

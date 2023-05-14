@@ -1,4 +1,5 @@
-import { Animated, ImageProps, StyleSheet, ViewProps } from 'react-native';
+import type { Animated, ImageProps, ViewProps } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { usePageSwiperContext } from '../context';
 
 export type AnimatedHeaderProps<T> = {
