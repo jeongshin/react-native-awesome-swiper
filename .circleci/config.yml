@@ -1,0 +1,25 @@
+# This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
+version: 2.1
+
+orbs:
+  node: circleci/node@5.0.2
+
+jobs:
+  test:
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+      - run:
+          command: yarn test
+          name: Run unit tests
+
+workflows:
+  test:
+    jobs:
+      - test:
+        filters:
+          tags:
+            # skip on release
+            ignore: /^v[0-9]+\.[0-9]+\.[0-9]+$/
