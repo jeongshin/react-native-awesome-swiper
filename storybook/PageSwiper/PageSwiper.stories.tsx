@@ -1,22 +1,22 @@
 import type { ReactElement } from 'react';
 import React from 'react';
-import { ScrollView } from 'react-native';
+import { View } from 'react-native';
 import { storiesOf } from '@storybook/react-native';
 import Basic from './Basic.story';
 import { storybookWebSettingsDecorator } from '../storybook.utils';
 
 export default {
-  title: 'InfiniteSwiper',
+  title: 'PageSwiper',
 };
 
 const BasicStory = (): ReactElement => {
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <Basic />
-    </ScrollView>
+    </View>
   );
 };
 
-storiesOf('InfiniteSwiper', module)
+storiesOf('PageSwiper', module)
   .addDecorator(storybookWebSettingsDecorator)
   .add('Basic', () => <BasicStory />, {});

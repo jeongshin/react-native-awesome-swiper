@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { Animated } from 'react-native';
+import type { Animated } from 'react-native';
 
 export interface ContextType {
   itemCount: number;

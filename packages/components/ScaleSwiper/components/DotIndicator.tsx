@@ -1,8 +1,9 @@
 import React, { useMemo } from 'react';
-import {
+import type {
   StyleProp,
+  ViewStyle} from 'react-native';
+import {
   View,
-  ViewStyle,
   Animated,
   StyleSheet,
   Pressable,

@@ -5,13 +5,14 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {
-  Animated,
+import type {
   FlatList,
   FlatListProps,
   ListRenderItem,
   NativeScrollEvent,
-  NativeSyntheticEvent,
+  NativeSyntheticEvent} from 'react-native';
+import {
+  Animated,
   Platform,
   useWindowDimensions,
   View,

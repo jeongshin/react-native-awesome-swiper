@@ -1,0 +1,167 @@
+# AnimatedLineTabs
+
+### Basic usage
+
+```tsx title="PageSwiperSample.tsx"
+import { PageSwiper, Page } from 'react-native-awesome-swiper';
+
+const Basic = () => {
+  const [activeIndex, setActiveIndex] = useState(3);
+
+  const { top } = useSafeAreaInsets();
+
+  const ref = useRef<FlatList<Page>>(null);
+
+  const pages: Page[] = [
+    { label: 'pink', Component: SamplePage },
+    { label: 'purple', Component: SamplePage },
+    { label: 'green', Component: SamplePage },
+    { label: 'yellow', Component: SamplePage },
+    { label: 'gray', Component: SamplePage },
+    { label: 'black', Component: SamplePage },
+    { label: 'skyblue', Component: SamplePage },
+  ];
+
+  return (
+    <PageSwiper.Provider>
+      <PageSwiper.AnimatedLineTabs
+        pages={pages}
+        activeIndex={activeIndex}
+        topInset={top}
+      />
+      <PageSwiper.PageFlatList
+        ref={ref}
+        pages={pages}
+        onActivePageIndexChange={setActiveIndex}
+        initialScrollIndex={activeIndex}
+      />
+    </PageSwiper.Provider>
+  );
+};
+```
+
+> PageFlatList uses FlatList API and AnimatedLineTabs uses ScrollView
+
+### `pages`
+
+page data `T` should extend `Page` type
+
+| Type | Default   | Required |
+| ---- | --------- | -------- |
+| T [] | undefined | YES      |
+
+```ts
+interface PageProps {
+  label: string;
+  index: number;
+}
+
+interface Page {
+  label: string;
+  Component: React.FunctionComponent<PageProps>;
+}
+```
+
+### `activeIndex`
+
+activeIndex is used to automatically scroll to active item
+
+| Type   | Default | Required |
+| ------ | ------- | -------- |
+| string | #cccccc | NO       |
+
+### `onPress`
+
+onPress function when tab pressed see `scrollPageConfig` for detail
+
+| Type                    | Default   | Required |
+| ----------------------- | --------- | -------- |
+| (index: number) => void | undefined | NO       |
+
+### `viewOffset`
+
+left offset when auto scroll
+
+| Type   | Default   | Required |
+| ------ | --------- | -------- |
+| number | undefined | NO       |
+
+### `lineThickness`
+
+underline height in px
+
+| Type   | Default | Required |
+| ------ | ------- | -------- |
+| number | 4       | NO       |
+
+### `lineColor`
+
+undeline hex color
+
+| Type   | Default | Required |
+| ------ | ------- | -------- |
+| string | #000000 | NO       |
+
+### `topInset`
+
+top inset for safearea
+
+| Type   | Default | Required |
+| ------ | ------- | -------- |
+| number | 0       | NO       |
+
+### `textStyle`
+
+text style for tab label. for more customization use `renderTab`
+
+| Type                   | Default   | Required |
+| ---------------------- | --------- | -------- |
+| `StyleProp<TextStyle>` | undefined | NO       |
+
+### `tabStyle`
+
+tab style. for more customization use `renderTab`
+
+| Type                   | Default   | Required |
+| ---------------------- | --------- | -------- |
+| `StyleProp<ViewStyle>` | undefined | NO       |
+
+### `backgroundColor`
+
+backgroundColor of tab scroll view
+
+| Type   | Default | Required |
+| ------ | ------- | -------- |
+| string | #ffffff | NO       |
+
+### `activeTextColor`
+
+active text color
+
+| Type   | Default | Required |
+| ------ | ------- | -------- |
+| string | #000000 | NO       |
+
+### `inactiveTextColor`
+
+inactive text color
+
+| Type   | Default | Required |
+| ------ | ------- | -------- |
+| string | #888888 | NO       |
+
+### `renderTab`
+
+custom render function to fully customize tab
+
+| Type                                           | Default   | Required |
+| ---------------------------------------------- | --------- | -------- |
+| (label: string, index: number) => ReactElement | undefined | NO       |
+
+### `scrollPageConfig`
+
+scroll configuration when tab pressed
+
+| Type                                            | Default   | Required |
+| ----------------------------------------------- | --------- | -------- |
+| { animated?: boolean; scrollOnPress?: boolean } | undefined | NO       |

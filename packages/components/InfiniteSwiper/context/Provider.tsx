@@ -2,10 +2,11 @@ import React, { useMemo, useRef, useState } from 'react';
 import { Animated } from 'react-native';
 import {
   SwiperContext,
-  ContextType,
-  UpdateContextType,
   UpdateSwiperContext,
 } from './context';
+import type {
+  ContextType,
+  UpdateContextType} from './context';
 
 export interface ProviderProps {
   children?: React.ReactNode;

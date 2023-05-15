@@ -11,7 +11,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "prepare": "husky install",
-    "lint": "eslint '**/*.{ts,tsx}' --ext .ts,.tsx --fix",
+    "lint": "eslint 'packages/**/*.{ts,tsx}' --ext .ts,.tsx --fix",
     "typescript": "tsc --noemit",
     "patch": "yarn build && cd lib && release-it patch",
     "minor": "yarn build && cd lib && release-it minor",
@@ -32,6 +32,7 @@
     "react-dom": "18.1.0",
     "react-native": "0.70.5",
     "react-native-gesture-handler": "~2.8.0",
+    "react-native-safe-area-context": "4.4.1",
     "react-native-web": "~0.18.9"
   },
   "devDependencies": {
@@ -57,7 +58,8 @@
     "@storybook/react-native": "^5.3.27",
     "@storybook/react-native-server": "^5.3.23",
     "@testing-library/jest-native": "^5.4.1",
-    "@testing-library/react-native": "^11.5.2",
+    "@testing-library/react-hooks": "^8.0.1",
+    "@testing-library/react-native": "^12.1.2",
     "@types/jest": "^29.4.0",
     "@types/react": "~18.0.24",
     "@types/react-native": "~0.70.6",

@@ -11,6 +11,7 @@ module.exports = {
   plugins: ['@typescript-eslint', 'react-hooks', 'prettier', 'import'],
   rules: {
     'no-console': 'error',
+    '@typescript-eslint/consistent-type-imports': 'error',
     '@typescript-eslint/ban-ts-comment': 'off',
     'import/order': [
       'warn',

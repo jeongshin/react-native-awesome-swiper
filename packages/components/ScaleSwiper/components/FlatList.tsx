@@ -1,13 +1,14 @@
 import React, { useCallback, useLayoutEffect, useRef } from 'react';
-import {
+import type {
   FlatListProps,
-  Animated,
   ListRenderItem,
-  useWindowDimensions,
-  Platform,
   FlatList,
   NativeSyntheticEvent,
-  NativeScrollEvent,
+  NativeScrollEvent} from 'react-native';
+import {
+  Animated,
+  useWindowDimensions,
+  Platform
 } from 'react-native';
 import logger from '../../../logger';
 import { getItemLayoutFactory } from '../../../utils';

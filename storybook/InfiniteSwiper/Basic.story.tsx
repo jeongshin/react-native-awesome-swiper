@@ -1,9 +1,10 @@
 import React, { useCallback } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
-import InfiniteSwiper, {
+import InfiniteSwiper from '../../packages/components/InfiniteSwiper';
+import Typo from '../Typo';
+import type {
   InfiniteSwiperRenderItem,
 } from '../../packages/components/InfiniteSwiper';
-import Typo from '../Typo';
 
 const Basic = () => {
   const data = [

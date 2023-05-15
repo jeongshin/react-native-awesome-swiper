@@ -1,0 +1,116 @@
+import gif from '../../../static/gif/page_swiper_basic.gif';
+
+# PageFlatList
+
+## Overview
+
+<div className="sample-gif">
+  <img src={gif} className="sample-gif-img" alt="page-swiper-example" />
+</div>
+
+### Basic usage
+
+```tsx title="PageSwiperSample.tsx"
+import { PageSwiper, Page } from 'react-native-awesome-swiper';
+
+const Basic = () => {
+  const [activeIndex, setActiveIndex] = useState(3);
+
+  const { top } = useSafeAreaInsets();
+
+  const ref = useRef<FlatList<Page>>(null);
+
+  const pages: Page[] = [
+    { label: 'pink', Component: SamplePage },
+    { label: 'purple', Component: SamplePage },
+    { label: 'green', Component: SamplePage },
+    { label: 'yellow', Component: SamplePage },
+    { label: 'gray', Component: SamplePage },
+    { label: 'black', Component: SamplePage },
+    { label: 'skyblue', Component: SamplePage },
+  ];
+
+  return (
+    <PageSwiper.Provider>
+      <PageSwiper.AnimatedLineTabs
+        pages={pages}
+        activeIndex={activeIndex}
+        topInset={top}
+      />
+      {/*or PageSwiper.MemoizedPageSwiper*/}
+      <PageSwiper.PageFlatList
+        ref={ref}
+        pages={pages}
+        onActivePageIndexChange={setActiveIndex}
+        initialScrollIndex={activeIndex}
+      />
+    </PageSwiper.Provider>
+  );
+};
+```
+
+### Features 🚀
+
+- Implemented with FlatList API
+
+- `getItemLayout`, `snapToInterval` etc props are managed internally
+
+- Use `<PageSwiper.MemoizedPageSwiper />` for optimization
+
+- All FlatList props supported except `data`, `renderItem`, `snapToInterval`
+
+### Issues ✍️
+
+- Only handles full screen width pages with horizontal for now (can be updated in next update)
+
+### `pages`
+
+page data `T` should extend `Page` type
+
+| Type | Default   | Required |
+| ---- | --------- | -------- |
+| T [] | undefined | YES      |
+
+```ts
+interface PageProps {
+  label: string;
+  index: number;
+}
+
+interface Page {
+  label: string;
+  Component: React.FunctionComponent<PageProps>;
+}
+```
+
+### `onActivePageIndexChange`
+
+callback when currently visible page index changed
+
+| Type                    | Default   | Required |
+| ----------------------- | --------- | -------- |
+| (index: number) => void | undefined | NO       |
+
+### `minimumViewTime`
+
+same with `ViewabilityConfig['minimumViewTime']`
+
+| Type   | Default | Required |
+| ------ | ------- | -------- |
+| number | 200     | NO       |
+
+### `itemVisiblePercentThreshold`
+
+same with `ViewabilityConfig['itemVisiblePercentThreshold']`
+
+| Type   | Default | Required |
+| ------ | ------- | -------- |
+| number | 70      | NO       |
+
+### `waitForInteraction`
+
+same with `ViewabilityConfig['waitForInteraction']`
+
+| Type    | Default | Required |
+| ------- | ------- | -------- |
+| boolean | true    | NO       |

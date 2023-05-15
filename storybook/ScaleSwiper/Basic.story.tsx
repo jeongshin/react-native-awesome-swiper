@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Image, StyleSheet, Platform, FlatList } from 'react-native';
+import type { FlatList } from 'react-native';
+import { View, Image, StyleSheet, Platform } from 'react-native';
 import ScaleSwiper from '../../packages/components/ScaleSwiper';
 import useRefCallback from '../../packages/hooks/useRefCallback';
 import Typo from '../Typo';

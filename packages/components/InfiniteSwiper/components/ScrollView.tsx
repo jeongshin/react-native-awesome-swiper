@@ -6,12 +6,13 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {
-  Animated,
+import type {
   NativeScrollEvent,
   NativeSyntheticEvent,
   ScrollView,
-  ScrollViewProps,
+  ScrollViewProps} from 'react-native';
+import {
+  Animated,
   useWindowDimensions,
   View,
 } from 'react-native';
