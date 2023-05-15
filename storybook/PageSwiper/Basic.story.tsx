@@ -31,7 +31,7 @@ const Basic = () => {
         topInset={top}
         contentContainerStyle={{ paddingHorizontal: 20 }}
       />
-      <PageSwiper.PageFlatList
+      <PageSwiper.MemoizedPageSwiper
         ref={ref}
         pages={pages}
         onActivePageIndexChange={setActiveIndex}

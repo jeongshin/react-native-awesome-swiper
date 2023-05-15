@@ -147,5 +147,12 @@ function PageSwiper<T extends Page>(
     />
   );
 }
+const ForwardedPageSwiper = forwardRef(PageSwiper);
 
-export default forwardRef(PageSwiper);
+const MemoizedPageSwiper = React.memo(
+  ForwardedPageSwiper,
+) as typeof ForwardedPageSwiper;
+
+export { MemoizedPageSwiper };
+
+export default ForwardedPageSwiper;

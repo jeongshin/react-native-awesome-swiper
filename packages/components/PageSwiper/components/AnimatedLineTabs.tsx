@@ -1,5 +1,10 @@
 import React, { useLayoutEffect, useRef } from 'react';
-import type { ScrollViewProps, ViewStyle, StyleProp } from 'react-native';
+import type {
+  ScrollViewProps,
+  ViewStyle,
+  StyleProp,
+  TextStyle,
+} from 'react-native';
 import {
   Text,
   StyleSheet,
@@ -22,8 +27,7 @@ interface AnimatedLineTabsProps<T> extends ScrollViewProps {
   lineThickness?: number;
   lineColor?: string;
   topInset?: number;
-  gap?: number;
-  textStyle?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
   tabStyle?: StyleProp<ViewStyle>;
   backgroundColor?: string;
   activeTextColor?: string;
@@ -42,7 +46,6 @@ function AnimatedLineTabs<T extends Page>({
   viewOffset = 24,
   scrollPageConfig,
   topInset,
-  gap = 0,
   textStyle,
   backgroundColor = '#ffffff',
   lineColor = '#000000',
@@ -80,7 +83,7 @@ function AnimatedLineTabs<T extends Page>({
     if (!doneReLayout || typeof activeIndex !== 'number') return;
 
     const offset =
-      getOffsetOfIndex({ layout, index: activeIndex, gap }) - viewOffset;
+      getOffsetOfIndex({ layout, index: activeIndex, gap: 0 }) - viewOffset;
 
     if (initialScrollDone.current) {
       ref.current?.scrollTo({ y: 0, x: offset });
@@ -88,7 +91,7 @@ function AnimatedLineTabs<T extends Page>({
       initialScrollDone.current = true;
       ref.current?.scrollTo({ y: 0, x: offset, animated: false });
     }
-  }, [activeIndex, doneReLayout, viewOffset, gap]);
+  }, [activeIndex, doneReLayout, viewOffset]);
 
   return (
     <View>

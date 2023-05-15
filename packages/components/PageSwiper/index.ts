@@ -1,5 +1,5 @@
 import AnimatedLineTabs from './components/AnimatedLineTabs';
-import PageFlatList from './components/PageFlatList';
+import PageFlatList, { MemoizedPageSwiper } from './components/PageFlatList';
 import { Provider } from './context';
 import type {
   Page,
@@ -19,7 +19,7 @@ export default {
   Provider,
   PageFlatList,
   AnimatedLineTabs,
-
+  MemoizedPageSwiper,
   // PageScrollView,
   // AnimatedHeaderImage,
   // useAnimatedPageSwiperHeader,
