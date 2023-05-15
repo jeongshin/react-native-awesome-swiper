@@ -7,6 +7,10 @@
   "main": "index.js",
   "types": "index.d.ts",
   "version": "0.2.1",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
   "keywords": [
     "react",
     "react-native",
