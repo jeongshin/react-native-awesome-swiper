@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react';
 import type { FlatList } from 'react-native';
-import { Animated, Text } from 'react-native';
+import { Pressable } from 'react-native';
+import { View } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { PageSwiper } from '../../packages';
 
@@ -13,10 +15,17 @@ const Basic = () => {
 
   const ref = useRef<FlatList<Page>>(null);
 
+  const [count, setCount] = useState(0);
+
+  const handlePress = () => setCount((p) => p + 1);
+
   const pages: Page[] = [
     { label: 'pink', Component: SamplePage },
     { label: 'purple', Component: SamplePage },
-    { label: 'green', Component: SamplePage },
+    {
+      label: 'green',
+      Component: <SampleElementPage count={count} onPress={handlePress} />,
+    },
     { label: 'yellow', Component: SamplePage },
     { label: 'gray', Component: SamplePage },
     { label: 'black', Component: SamplePage },
@@ -41,9 +50,33 @@ const Basic = () => {
   );
 };
 
+function SampleElementPage({
+  count,
+  onPress,
+}: {
+  count: number;
+  onPress: () => void;
+}) {
+  return (
+    <View style={{ width: '100%' }}>
+      <Pressable
+        onPress={onPress}
+        style={{
+          width: 30,
+          height: 30,
+          backgroundColor: 'red',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Text>{count}</Text>
+      </Pressable>
+    </View>
+  );
+}
+
 function SamplePage({ label }: PageProps) {
   return (
-    <Animated.ScrollView
+    <ScrollView
       style={[
         {
           width: '100%',
@@ -64,7 +97,7 @@ function SamplePage({ label }: PageProps) {
           {char}
         </Text>
       ))}
-    </Animated.ScrollView>
+    </ScrollView>
   );
 }
 

@@ -13,14 +13,16 @@ import { Animated } from 'react-native';
 import { View, useWindowDimensions } from 'react-native';
 import { usePageSwiperContext } from '../context';
 
-export interface PageProps {
+export interface PageProps<T = unknown> {
   label: string;
   index: number;
+  data: T;
 }
 
-export interface Page {
+export interface Page<T = unknown> {
+  Component: React.FunctionComponent<PageProps> | React.ReactElement;
   label: string;
-  Component: React.FunctionComponent<PageProps>;
+  data?: T;
 }
 
 export interface PageSwiperProps<T>
@@ -37,7 +39,7 @@ export interface PageSwiperProps<T>
   onActivePageIndexChange?: (index: number) => void;
 }
 
-function PageSwiper<T extends Page>(
+function PageSwiper<P, T extends Page<P>>(
   {
     pages,
     onActivePageIndexChange,
@@ -76,7 +78,7 @@ function PageSwiper<T extends Page>(
   );
 
   const renderItem: ListRenderItem<T> = useCallback(
-    ({ item: { Component, label }, index }) => {
+    ({ item: { Component, label, data }, index }) => {
       return (
         <View
           style={{
@@ -84,7 +86,11 @@ function PageSwiper<T extends Page>(
             flex: 1,
             backgroundColor: label,
           }}>
-          <Component label={label} index={index} />
+          {typeof Component === 'function' ? (
+            <Component label={label} index={index} data={data!} />
+          ) : (
+            Component
+          )}
         </View>
       );
     },
