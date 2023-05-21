@@ -37,6 +37,7 @@ export interface PageSwiperProps<T>
     ViewabilityConfig {
   pages: T[];
   onActivePageIndexChange?: (index: number) => void;
+  renderItem?: ListRenderItem<T>;
 }
 
 function PageSwiper<P, T extends Page<P>>(
@@ -50,6 +51,7 @@ function PageSwiper<P, T extends Page<P>>(
     scrollEventThrottle,
     keyExtractor,
     waitForInteraction = true,
+    renderItem: givenRenderItem,
     ...props
   }: PageSwiperProps<T>,
   ref?: ForwardedRef<FlatList<T>>,
@@ -84,7 +86,6 @@ function PageSwiper<P, T extends Page<P>>(
           style={{
             width,
             flex: 1,
-            backgroundColor: label,
           }}>
           {typeof Component === 'function' ? (
             <Component label={label} index={index} data={data!} />
@@ -139,7 +140,7 @@ function PageSwiper<P, T extends Page<P>>(
       }}
       data={pages as Animated.WithAnimatedValue<T>[]}
       style={{ width }}
-      renderItem={renderItem}
+      renderItem={givenRenderItem ?? renderItem}
       getItemLayout={getItemLayout}
       snapToInterval={width}
       automaticallyAdjustContentInsets={false}
