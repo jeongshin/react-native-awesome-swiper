@@ -6,7 +6,7 @@
   "name": "react-native-awesome-swiper",
   "main": "index.js",
   "types": "index.d.ts",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
