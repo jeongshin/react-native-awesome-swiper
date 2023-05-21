@@ -21,7 +21,7 @@ const Basic = () => {
   const ref = useRef<FlatList<Page>>(null);
 
   const pages: Page[] = [
-    { label: 'pink', Component: SamplePage },
+    { label: 'pink', Component: SamplePage }, // or Component: <SamplePage />
     { label: 'purple', Component: SamplePage },
     { label: 'green', Component: SamplePage },
     { label: 'yellow', Component: SamplePage },
@@ -72,14 +72,16 @@ page data `T` should extend `Page` type
 | T [] | undefined | YES      |
 
 ```ts
-interface PageProps {
+export interface PageProps<T = unknown> {
   label: string;
   index: number;
+  data: T;
 }
 
-interface Page {
+export interface Page<T = unknown> {
+  Component: React.FunctionComponent<PageProps> | React.ReactElement;
   label: string;
-  Component: React.FunctionComponent<PageProps>;
+  data?: T;
 }
 ```
 
