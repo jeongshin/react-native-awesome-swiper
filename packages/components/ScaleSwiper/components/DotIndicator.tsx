@@ -1,13 +1,6 @@
 import React, { useMemo } from 'react';
-import type {
-  StyleProp,
-  ViewStyle} from 'react-native';
-import {
-  View,
-  Animated,
-  StyleSheet,
-  Pressable,
-} from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
+import { View, Animated, StyleSheet, Pressable } from 'react-native';
 import useSwiperContext from '../hooks/useSwiperContext';
 
 export interface DotIndicatorProps {
