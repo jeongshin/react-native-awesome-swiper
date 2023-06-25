@@ -1,3 +1,0 @@
-// FlatList
-// Provider
-// Dot Indicator
