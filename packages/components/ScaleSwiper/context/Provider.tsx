@@ -18,7 +18,7 @@ const Provider: React.FC<{
 
   const context = useMemo<SwiperContextType>(
     () => ({ itemCount, scrollX, itemWidth, activeIndex }),
-    [itemCount],
+    [itemCount, activeIndex, itemWidth],
   );
 
   const update = useMemo<UpdateSwiperContext>(
