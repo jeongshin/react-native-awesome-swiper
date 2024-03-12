@@ -4,12 +4,9 @@ import type {
   ListRenderItem,
   FlatList,
   NativeSyntheticEvent,
-  NativeScrollEvent} from 'react-native';
-import {
-  Animated,
-  useWindowDimensions,
-  Platform
+  NativeScrollEvent,
 } from 'react-native';
+import { Animated, useWindowDimensions, Platform } from 'react-native';
 import logger from '../../../logger';
 import { getItemLayoutFactory } from '../../../utils';
 import useUpdateSwiperContext from '../hooks/useUpdateSwiperContext';
